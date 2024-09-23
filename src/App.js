@@ -1,23 +1,10 @@
-// src/App.js
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Header from './components/header';
-import Footer from './components/footer';
-import Home from './components/home';
-import './styles/App.css';
+import { useRoutes } from "react-router-dom";
+import Themeroutes from "./routes/Router";
 
-function App() {
-  return (
-    <Router>
-      <div className="App">
-        <Header />
-        <Routes>
-          <Route path="/" exact component={Home} />
-        </Routes>
-        <Footer />
-      </div>
-    </Router>
-  );
-}
+const App = () => {
+  const routing = useRoutes(Themeroutes);
+
+  return <div className="dark">{routing}</div>;
+};
 
 export default App;

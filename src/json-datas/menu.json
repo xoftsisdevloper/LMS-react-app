@@ -1,0 +1,28 @@
+[
+    {
+      "title": "Dashboard",
+      "href": "/starter",
+      "icon": "bi bi-speedometer2"
+    },
+    {
+      "title": "Group",
+      "href": "/alerts",
+      "icon": "bi bi-bell"
+    },
+    {
+      "title": "Course",
+      "href": "/badges",
+      "icon": "bi bi-patch-check"
+    },
+    {
+      "title": "Subjects",
+      "href": "/buttons",
+      "icon": "bi bi-hdd-stack"
+    },
+    {
+      "title": "Login",
+      "href": "/login",
+      "icon": "bi bi-hdd-stack"
+    }
+  ] 
+  
