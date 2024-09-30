@@ -16,7 +16,7 @@ import {
 import Logo from "./Logo";
 import { ReactComponent as LogoWhite } from "../assets/images/logos/materialprowhite.svg";
 import user1 from "../assets/images/users/user4.jpg";
-
+import axios from "axios";
 const Header = () => {
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -29,6 +29,23 @@ const Header = () => {
   const showMobilemenu = () => {
     document.getElementById("sidebarArea").classList.toggle("showSidebar");
   };
+  
+  const logout = async (e) => {
+  
+    try {
+      const response = await axios.post('http://localhost:2000/users/sign_out');
+      localStorage.setItem('status', response.status);
+      console.log(response.data.message)
+
+    } catch (error) {
+      if (error.response) {
+        return error.response.data.message; 
+      } else {
+        return ('An error occurred. Please try again.'); 
+      }
+    }
+   
+  }
   return (
     <Navbar color="primary" dark expand="md" className="fix-header">
       <div className="d-flex align-items-center">
@@ -80,7 +97,7 @@ const Header = () => {
             <DropdownItem divider />
             <DropdownItem>My Balance</DropdownItem>
             <DropdownItem>Inbox</DropdownItem>
-            <DropdownItem>Logout</DropdownItem>
+            <DropdownItem onClick={logout}>Logout</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </Collapse>

@@ -1,11 +1,11 @@
 import { lazy } from "react";
 import { Navigate } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute.js";
 
 /****Layouts*****/
 const FullLayout = lazy(() => import("../layouts/FullLayout.js"));
 
 /***** Pages ****/
-
 const Starter = lazy(() => import("../views/Starter.js"));
 const About = lazy(() => import("../views/About.js"));
 const Alerts = lazy(() => import("../views/ui/Alerts"));
@@ -26,16 +26,16 @@ const ThemeRoutes = [
     element: <FullLayout />,
     children: [
       { path: "/", element: <Navigate to="/starter" /> },
-      { path: "/starter", exact: true, element: <Starter /> },
-      { path: "/about", exact: true, element: <About /> },
-      { path: "/alerts", exact: true, element: <Alerts /> },
-      { path: "/badges", exact: true, element: <Badges /> },
-      { path: "/buttons", exact: true, element: <Buttons /> },
-      { path: "/cards", exact: true, element: <Cards /> },
-      { path: "/grid", exact: true, element: <Grid /> },
-      { path: "/table", exact: true, element: <Tables /> },
-      { path: "/forms", exact: true, element: <Forms /> },
-      { path: "/breadcrumbs", exact: true, element: <Breadcrumbs /> },
+      { path: "/starter", exact: true, element: <ProtectedRoute><Starter /></ProtectedRoute> },
+      { path: "/about", exact: true, element: <ProtectedRoute><About /></ProtectedRoute> },
+      { path: "/alerts", exact: true, element: <ProtectedRoute><Alerts /></ProtectedRoute> },
+      { path: "/badges", exact: true, element: <ProtectedRoute><Badges /></ProtectedRoute> },
+      { path: "/buttons", exact: true, element: <ProtectedRoute><Buttons /></ProtectedRoute> },
+      { path: "/cards", exact: true, element: <ProtectedRoute><Cards /></ProtectedRoute> },
+      { path: "/grid", exact: true, element: <ProtectedRoute><Grid /></ProtectedRoute> },
+      { path: "/table", exact: true, element: <ProtectedRoute><Tables /></ProtectedRoute> },
+      { path: "/forms", exact: true, element: <ProtectedRoute><Forms /></ProtectedRoute> },
+      { path: "/breadcrumbs", exact: true, element: <ProtectedRoute><Breadcrumbs /></ProtectedRoute> },
       { path: "/login", exact: true, element: <Login /> },
     ],
   },
