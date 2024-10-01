@@ -22,6 +22,12 @@ const useSignup = () => {
                 },
                 body: JSON.stringify({ email, username, password, confirmPassword })
             })
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.message || 'Signup failed');
+            }
+
             const data = await res.json()
             if (data.error){
                 throw new Error(data.error)
