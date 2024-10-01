@@ -1,15 +1,23 @@
 import React from 'react';
-import { useRoutes } from 'react-router-dom';
-import { AuthProvider } from './contexts/Authcontext'; 
-import Themeroutes from "./routes/Router";
+import { useAuthcontext } from './contexts/Authcontext';
+import { Navigate, Route, Routes } from 'react-router-dom'
+import { Toaster } from 'react-hot-toast';
+import Login from './login/Login'
+import SignUp from './signup/SignUp';
+import FullLayout from './layouts/FullLayout';
+
 
 const App = () => {
-  const routing = useRoutes(Themeroutes);
-
+  const {authUser, setAuthUser} = useAuthcontext()
   return (
-    <AuthProvider> {/* Wrap with AuthProvider */}
-      <div className="dark">{routing}</div>
-    </AuthProvider>
+    <>
+    <Routes>
+      <Route path='/' element={authUser ? <FullLayout/> : <Navigate to='/login'/>}/>
+      <Route path='/login' element={authUser ? <Navigate to='/' /> : <Login/>}/>
+      <Route path='/signup' element={authUser ? <Navigate to='/' /> : <SignUp/>}/>
+    </Routes>
+    <Toaster />
+    </>
   );
 };
 
