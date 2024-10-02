@@ -24,7 +24,7 @@ const useLogout = () => {
             throw new Error(data)
         }
 
-        localStorage.removeItem('chat-user')
+        localStorage.removeItem('lms-user')
         setAuthUser(null)
     } catch (error) {
         console.log(error)

@@ -25,7 +25,7 @@ export const useLogin = () => {
 
             const data = await res.json();
 
-            localStorage.setItem('chat-user', JSON.stringify(data));
+            localStorage.setItem('lms-user', JSON.stringify(data));
             setAuthUser(data);
             toast.success('Logged in successfully');
         } catch (error) {
