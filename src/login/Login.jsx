@@ -10,7 +10,8 @@ import {
   MDBIcon,
   MDBCheckbox
 } from 'mdb-react-ui-kit';
-import { useLogin } from '../../hooks/uselogin';
+import { Link } from "react-router-dom";
+import { useLogin } from '../hooks/uselogin';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -58,6 +59,10 @@ const Login = () => {
                   className='mb-4' 
                   label='Remember password' 
                 />
+                
+                <Link to="/signup" className='text-sm hover:underline hover:text-blue-600 mt-2 inline-block'>
+                    {"Don't"} have an account?
+                </Link>
 
                 <MDBBtn size='lg' className='my-3 w-100' type="submit">
                 {loading? <span className='loading loading-spinner'></span> : "Login"}
