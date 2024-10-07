@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
     if (token === 200 ) {
       setIsAuthenticated(true);
     }
+    setIsAuthenticated(true);
   }, []);
 
   const login = (token) => {
@@ -20,7 +21,7 @@ export const AuthProvider = ({ children }) => {
     if (token === 200) {
       setIsAuthenticated(true);
     }
-    navigate('/'); 
+    navigate('/');
   };
 
   const logout = () => {

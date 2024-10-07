@@ -1,8 +1,10 @@
-import { lazy } from "react";
-import { Navigate } from "react-router-dom";
+import React, { lazy } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute.js";
+import Groups from "../components/groups/Groups.js";
 
 /****Layouts*****/
+// Make sure to import the layouts correctly
 const FullLayout = lazy(() => import("../layouts/FullLayout.js"));
 
 /***** Pages ****/
@@ -16,29 +18,25 @@ const Grid = lazy(() => import("../views/ui/Grid"));
 const Tables = lazy(() => import("../views/ui/Tables"));
 const Forms = lazy(() => import("../views/ui/Forms"));
 const Breadcrumbs = lazy(() => import("../views/ui/Breadcrumbs"));
-const Login = lazy(() => import("../views/ui/Login"));
 
 /*****Routes******/
-
-const ThemeRoutes = [
-  {
-    path: "/",
-    element: <FullLayout />,
-    children: [
-      { path: "/", element: <Navigate to="/starter" /> },
-      { path: "/starter", exact: true, element: <ProtectedRoute><Starter /></ProtectedRoute> },
-      { path: "/about", exact: true, element: <ProtectedRoute><About /></ProtectedRoute> },
-      { path: "/alerts", exact: true, element: <ProtectedRoute><Alerts /></ProtectedRoute> },
-      { path: "/badges", exact: true, element: <ProtectedRoute><Badges /></ProtectedRoute> },
-      { path: "/buttons", exact: true, element: <ProtectedRoute><Buttons /></ProtectedRoute> },
-      { path: "/cards", exact: true, element: <ProtectedRoute><Cards /></ProtectedRoute> },
-      { path: "/grid", exact: true, element: <ProtectedRoute><Grid /></ProtectedRoute> },
-      { path: "/table", exact: true, element: <ProtectedRoute><Tables /></ProtectedRoute> },
-      { path: "/forms", exact: true, element: <ProtectedRoute><Forms /></ProtectedRoute> },
-      { path: "/breadcrumbs", exact: true, element: <ProtectedRoute><Breadcrumbs /></ProtectedRoute> },
-      { path: "/login", exact: true, element: <Login /> },
-    ],
-  },
-];
+const ThemeRoutes = () => (
+  <Routes>
+    <Route path="/" element={<FullLayout />}>
+      <Route path="/" element={<Navigate to="/starter" replace />} />
+      <Route path="/groups" element={<ProtectedRoute><Groups /></ProtectedRoute>} />
+      <Route path="/starter" element={<ProtectedRoute><Starter /></ProtectedRoute>} />
+      <Route path="/about" element={<ProtectedRoute><About /></ProtectedRoute>} />
+      <Route path="/alerts" element={<ProtectedRoute><Alerts /></ProtectedRoute>} />
+      <Route path="/badges" element={<ProtectedRoute><Badges /></ProtectedRoute>} />
+      <Route path="/buttons" element={<ProtectedRoute><Buttons /></ProtectedRoute>} />
+      <Route path="/cards" element={<ProtectedRoute><Cards /></ProtectedRoute>} />
+      <Route path="/grid" element={<ProtectedRoute><Grid /></ProtectedRoute>} />
+      <Route path="/table" element={<ProtectedRoute><Tables /></ProtectedRoute>} />
+      <Route path="/forms" element={<ProtectedRoute><Forms /></ProtectedRoute>} />
+      <Route path="/breadcrumbs" element={<ProtectedRoute><Breadcrumbs /></ProtectedRoute>} />
+    </Route>
+  </Routes>
+);
 
 export default ThemeRoutes;
