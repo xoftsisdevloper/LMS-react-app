@@ -6,7 +6,7 @@
     },
     {
       "title": "Group",
-      "href": "/alerts",
+      "href": "/groups",
       "icon": "bi bi-bell"
     },
     {
@@ -17,11 +17,6 @@
     {
       "title": "Subjects",
       "href": "/buttons",
-      "icon": "bi bi-hdd-stack"
-    },
-    {
-      "title": "Login",
-      "href": "/login",
       "icon": "bi bi-hdd-stack"
     }
   ] 
