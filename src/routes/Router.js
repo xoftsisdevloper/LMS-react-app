@@ -23,7 +23,7 @@ const Breadcrumbs = lazy(() => import("../views/ui/Breadcrumbs"));
 const ThemeRoutes = () => (
   <Routes>
     <Route path="/" element={<FullLayout />}>
-      <Route path="/" element={<Navigate to="/starter" replace />} />
+      <Route path="/" element={<Navigate to="/starter" />} />
       <Route path="/groups" element={<ProtectedRoute><Groups /></ProtectedRoute>} />
       <Route path="/starter" element={<ProtectedRoute><Starter /></ProtectedRoute>} />
       <Route path="/about" element={<ProtectedRoute><About /></ProtectedRoute>} />

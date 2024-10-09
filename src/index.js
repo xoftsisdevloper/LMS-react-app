@@ -4,7 +4,7 @@ import "./assets/scss/style.scss";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import Loader from "./layouts/loader/Loader";
-import { AuthProvider } from './contexts/Authcontext'; 
+import { AuthContextProvider } from './contexts/Authcontext'; 
 
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement);
@@ -12,9 +12,9 @@ const root = createRoot(rootElement);
 root.render(
   <Suspense fallback={<Loader />}>
     <BrowserRouter>
-      <AuthProvider>
+      <AuthContextProvider>
         <App />
-      </AuthProvider>
+      </AuthContextProvider>
     </BrowserRouter>
   </Suspense>
 );
