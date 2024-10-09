@@ -5,6 +5,10 @@ import user2 from "../../assets/images/users/user2.jpg";
 import user3 from "../../assets/images/users/user3.jpg";
 import user4 from "../../assets/images/users/user4.jpg";
 import user5 from "../../assets/images/users/user5.jpg";
+import { useGroup } from '../../hooks/Groups/useGroups';
+import { useCreateGroup } from '../../hooks/Groups/useCreateGroup';
+import { useUpdateGroup } from '../../hooks/Groups/useUpdateGroup';
+
 
 const initialGroupsData = [
   {
@@ -49,6 +53,8 @@ const Groups = () => {
   const [newGroup, setNewGroup] = useState({ name: '', description: '', duration: '', status: 'Active' });
   const [editIndex, setEditIndex] = useState(null);  // To track editing group index
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const {createGroup} = useCreateGroup();
+  const {UpdateGroup} = useUpdateGroup();
 
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
@@ -62,12 +68,13 @@ const Groups = () => {
     if (newGroup.name && newGroup.description && newGroup.duration && newGroup.status) {
       if (editIndex !== null) {
         // Update existing group
-        const updatedGroups = [...groups];
+        const updatedGroups = [...group];
         updatedGroups[editIndex] = newGroup;
         setGroups(updatedGroups);
+        UpdateGroup(newGroup.name, newGroup.description, newGroup.duration, newGroup.status.toLowerCase(), newGroup._id);
       } else {
-        // Add new group
         setGroups((prevGroups) => [...prevGroups, newGroup]);
+        createGroup(newGroup.name, newGroup.description, newGroup.duration, newGroup.status.toLowerCase());
       }
       setNewGroup({ name: '', description: '', duration: '', status: 'Active' });
       setEditIndex(null);  // Reset edit index
@@ -77,23 +84,22 @@ const Groups = () => {
     }
   };
 
+
   // Open modal for editing an existing group
   const editGroup = (index) => {
     setEditIndex(index);
-    setNewGroup(groups[index]);
+    setNewGroup(group[index]);
     toggleModal();
   };
 
+  const {group, loading} = useGroup();
   return (
     <div>
       <Card>
         <CardBody>
         <div className="d-flex justify-content-between align-items-center mb-3">
             <div>
-                <CardTitle tag="h5">Groups Overview</CardTitle>
-                <CardSubtitle className="mb-2 text-muted" tag="h6">
-                Overview of the different project groups
-                </CardSubtitle>
+                <CardTitle tag="h5">Groups </CardTitle>
             </div>
             <Button
                 color="primary"
@@ -116,7 +122,7 @@ const Groups = () => {
               </tr>
             </thead>
             <tbody>
-              {groups.map((group, index) => (
+              {group.map((group, index) => (
                 <tr key={index} className="border-top">
                   <td>
                     <div className=" py-2">
@@ -135,9 +141,9 @@ const Groups = () => {
                   </td>
                   {/* <td>{group.name}</td> */}
                   {/* <td>{group.description}</td> */}
-                  <td>{group.duration}</td>
+                  <td>{group.duration} months</td>
                   <td>
-                    {group.status === "Active" ? (
+                    {group.status === "active" ? (
                       <span className="p-2 bg-success rounded-circle d-inline-block ms-3"></span>
                     ) : (
                       <span className="p-2 bg-danger rounded-circle d-inline-block ms-3"></span>

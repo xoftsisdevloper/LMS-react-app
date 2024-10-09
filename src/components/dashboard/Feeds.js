@@ -8,6 +8,8 @@ import {
   ListGroupItem,
   Button,
 } from "reactstrap";
+import { useGroup } from "../../hooks/Groups/useGroups";
+
 
 const FeedData = [
   {
@@ -49,36 +51,31 @@ const FeedData = [
 ];
 
 const Feeds = () => {
+  const {group, loading} = useGroup();
   return (
     <Card>
       <CardBody>
-        <CardTitle tag="h5">Feeds</CardTitle>
-        <CardSubtitle className="mb-2 text-muted" tag="h6">
-          Widget you can use
-        </CardSubtitle>
-        <ListGroup flush className="mt-4">
-          {FeedData.map((feed, index) => (
-            <ListGroupItem
-              key={index}
-              action
-              href="/"
-              tag="a"
-              className="d-flex align-items-center p-3 border-0"
-            >
-              <Button
-                className="rounded-circle me-3"
-                size="sm"
-                color={feed.color}
+        <CardTitle tag="h5">Active Groups</CardTitle>
+        <ListGroup flush className="mt-1">
+          {group.map((item, index) => (
+            item.status === 'active' && ( // Check if status is 'active'
+              <ListGroupItem
+                key={index}
+                action
+                href="/"
+                tag="a"
+                className="d-flex align-items-center p-3 border-0"
               >
-                <i className={feed.icon}></i>
-              </Button>
-              {feed.title}
-              <small className="ms-auto text-muted text-small">
-                {feed.date}
-              </small>
-            </ListGroupItem>
+                {item.name}
+                <small className="ms-auto text-muted text-small">
+                  {item.duration} months
+                </small>
+                
+              </ListGroupItem>
+            )
           ))}
         </ListGroup>
+
       </CardBody>
     </Card>
   );
