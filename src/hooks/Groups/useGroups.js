@@ -34,8 +34,8 @@ export const useGroup = () => {
     };
 
     useEffect(() => {
-        fetchGroups(); 
+        fetchGroups();
         
-    }, [group]); 
+    }, []);
     return { loading, group };
 };
