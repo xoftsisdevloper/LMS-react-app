@@ -1,22 +1,22 @@
 [
     {
       "title": "Dashboard",
-      "href": "/starter",
+      "href": "/instructor/starter",
       "icon": "bi bi-speedometer2"
     },
     {
       "title": "Group",
-      "href": "/groups",
+      "href": "/instructor/groups",
       "icon": "bi bi-bell"
     },
     {
       "title": "Course",
-      "href": "/badges",
+      "href": "/instructor/badges",
       "icon": "bi bi-patch-check"
     },
     {
       "title": "Subjects",
-      "href": "/buttons",
+      "href": "/instructor/buttons",
       "icon": "bi bi-hdd-stack"
     }
   ] 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, Button, Card, CardBody, CardTitle, CardSubtitle, Modal, ModalHeader, ModalBody, ModalFooter, Input, FormGroup, Label } from 'reactstrap';
 import user1 from "../../assets/images/users/user1.jpg";
 import user2 from "../../assets/images/users/user2.jpg";
@@ -56,6 +56,8 @@ const Groups = () => {
   const {createGroup} = useCreateGroup();
   const {UpdateGroup} = useUpdateGroup();
 
+  const {group, loading} = useGroup();
+
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
   const handleInputChange = (e) => {
@@ -92,7 +94,6 @@ const Groups = () => {
     toggleModal();
   };
 
-  const {group, loading} = useGroup();
   return (
     <div>
       <Card>
