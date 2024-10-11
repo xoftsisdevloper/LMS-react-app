@@ -14,6 +14,7 @@ import AuthRedirect from './routes/AuthRedirect';
 import { useAuthcontext } from './contexts/Authcontext';
 import CourseList from './components/students-view/course/CourseList';
 import CourseDetails from './components/students-view/course/course-details';
+import StudentCourseList from './components/students-view/course/StudentCourseList';
 
 const App = () => {
   const { authUser } = useAuthcontext();
@@ -46,6 +47,7 @@ const App = () => {
         >
           <Route path="/" element={<Navigate to="/home" />} />
           <Route path="/courses" element={<CourseList />} />
+          <Route path="/student-courses" element={<StudentCourseList />} />
           <Route path="/course/details/:id" element={<CourseDetails />} />
           <Route path="/home" element={<Home />} />
         </Route>

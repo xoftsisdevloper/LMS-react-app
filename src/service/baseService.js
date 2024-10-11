@@ -6,8 +6,15 @@ export const courseListService = async () => {
   return data
 }
 
-export const studentCourseService = async (id) => {
+export const CourseService = async (id) => {
   const data = await axios.get(`/api/courses/${id}`)
 
   return data
 }
+
+
+export const studentCourseListService = async (id) => {
+    const data = await axios.get(`/api/users/${id}/courses`)
+  
+    return data
+  }

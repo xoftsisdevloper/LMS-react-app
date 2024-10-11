@@ -66,7 +66,9 @@ const StudentHeader = () => {
 
         onClick={()=> navigate('/courses')}
         >Explore courses</Button>
-        <Button> My courses</Button>
+        <Button
+        onClick={()=> navigate('/student-courses')}
+        > My courses</Button>
         <Collapse navbar isOpen={isOpen}>
             <Nav className="me-auto" navbar>
             </Nav>

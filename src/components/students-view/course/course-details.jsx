@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useStudentContext } from '../../../contexts/Student-context'
 import { useParams } from 'react-router-dom'
-import { studentCourseService } from '../../../service/baseService'
+import { CourseService } from '../../../service/baseService'
 import Course from './Course'
 
 const CourseDetails = () => {
@@ -14,7 +14,7 @@ const CourseDetails = () => {
     const {id} = params
 
     const fetchCourseDetails = async (courseId) => {
-        const res = await studentCourseService(courseId)
+        const res = await CourseService(courseId)
         const data = res.data
 
         setStudentCourse(data)

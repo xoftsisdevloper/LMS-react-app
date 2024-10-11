@@ -1,25 +1,27 @@
 import React, { useEffect } from 'react'
-import Course from './Course'
+import { useAuthcontext } from '../../../contexts/Authcontext'
 import { useStudentContext } from '../../../contexts/Student-context'
-import { courseListService } from '../../../service/baseService'
+import { studentCourseListService } from '../../../service/baseService'
+import Course from './Course'
 
-const CourseList = () => {
+const StudentCourseList = () => {
+
+    const {authUser} = useAuthcontext()
     const {studentCoursesList, setStudentCoursesList} = useStudentContext()
 
-    const fetchCourseList = async () => {
-        const res = await courseListService()
+    const fetchCourseList = async (id) => {
+        const res = await studentCourseListService(id)
         setStudentCoursesList(res?.data)
     }
 
     useEffect(() => {
-        fetchCourseList()
+        fetchCourseList(authUser.user._id)
 
         return () => setStudentCoursesList([])
-    }, [])
+    }, [authUser.user._id])
     
   return (
-    <div>
-        <h2>Course List</h2>
+    <div>StudentCourseList
         {
             studentCoursesList && studentCoursesList.length > 0 ? (
             studentCoursesList.map((course) => (
@@ -33,4 +35,4 @@ const CourseList = () => {
   )
 }
 
-export default CourseList
+export default StudentCourseList
