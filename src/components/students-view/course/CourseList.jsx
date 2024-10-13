@@ -38,10 +38,10 @@ const CourseList = () => {
                             <Col key={course.id || course.name} sm="12" md="6" lg="4" className="mb-4">
                                 <Card className="course-card h-100">
                                     <img
-                                        src={defaultIMG}
+                                        src={course.imageUrl ? course.imageUrl : defaultIMG}
                                         alt={course.name}
                                         className="card-img-top"
-                                        style={{ borderTopLeftRadius: '8px', borderTopRightRadius: '8px', height: 250, opacity: 0.5 }}
+                                        style={{ borderTopLeftRadius: '8px', borderTopRightRadius: '8px', height: 250 }}
                                     />
                                     <CardBody>
                                         <CardTitle tag="h5">{course.name}</CardTitle>
