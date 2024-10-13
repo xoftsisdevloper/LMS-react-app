@@ -14,7 +14,13 @@ export const CourseService = async (id) => {
 
 
 export const studentCourseListService = async (id) => {
-    const data = await axios.get(`/api/users/${id}/courses`)
+    const data = await axios.get(`/api/groups/${id}/courses`)
   
+    return data
+  }
+
+  export const fetchAllUsersService = async () => {
+    const data = await axios.get(`/api/users`)
+
     return data
   }

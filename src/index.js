@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import Loader from "./layouts/loader/Loader";
 import { AuthContextProvider } from './contexts/Authcontext';
 import { StudentContextProvider } from './contexts/Student-context'; 
+import { InstructorContextProvider } from "./contexts/Instructor-context";
 
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement);
@@ -14,9 +15,11 @@ root.render(
   <Suspense fallback={<Loader />}>
     <BrowserRouter>
       <AuthContextProvider>
-      <StudentContextProvider>
-        <App />
-      </StudentContextProvider>
+      <InstructorContextProvider>
+        <StudentContextProvider>
+          <App />
+        </StudentContextProvider>
+        </InstructorContextProvider>
       </AuthContextProvider>
     </BrowserRouter>
   </Suspense>

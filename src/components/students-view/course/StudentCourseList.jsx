@@ -13,31 +13,33 @@ import {
   CardText,
   Spinner,
   Button,
+  ListGroup,
 } from 'reactstrap';
+import { useNavigate } from 'react-router-dom';
 
 const StudentCourseList = () => {
   const { authUser } = useAuthcontext();
   const { studentCoursesList, setStudentCoursesList } = useStudentContext();
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate()
 
   const fetchCourseList = async (id) => {
     try {
-      setLoading(true); // Set loading to true before fetching
+      setLoading(true);
       const res = await studentCourseListService(id);
-      setStudentCoursesList(res?.data || []);
+      setStudentCoursesList(res?.data.data || []);
     } catch (error) {
       console.error('Failed to fetch courses:', error);
     } finally {
-      setLoading(false); // Reset loading state after fetching
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchCourseList(authUser.user._id);
-
-    return () => setStudentCoursesList([]);
   }, [authUser.user._id]);
 
+  console.log(studentCoursesList)
   return (
     <Container className="mt-5">
       <h2 className="text-center mb-4">My Courses</h2>
@@ -49,12 +51,14 @@ const StudentCourseList = () => {
         <Row>
           {studentCoursesList && studentCoursesList.length > 0 ? (
             studentCoursesList.map((course) => (
-              <Col md="4" key={course.id || course.name} className="mb-4">
+              <Col md="4" key={course._id || course.name} className="mb-4">
                 <Card>
                   <CardBody>
                     <CardTitle tag="h5">{course.name}</CardTitle>
                     <CardText>{course.description || 'No description available.'}</CardText>
-                    <Button color="primary">View Course</Button>
+                    <Button color="primary"
+                    onClick={() => navigate(`/course/details/${course._id}`)}
+                    >View Course</Button>
                   </CardBody>
                 </Card>
               </Col>

@@ -51,13 +51,13 @@ const FeedData = [
 ];
 
 const Feeds = () => {
-  const {group, loading} = useGroup();
+  // const {group, loading} = useGroup();
   return (
     <Card>
       <CardBody>
         <CardTitle tag="h5">Active Groups</CardTitle>
         <ListGroup flush className="mt-1">
-          {group.map((item, index) => (
+          {/* {group.map((item, index) => (
             item.status === 'active' && ( // Check if status is 'active'
               <ListGroupItem
                 key={index}
@@ -73,7 +73,7 @@ const Feeds = () => {
                 
               </ListGroupItem>
             )
-          ))}
+          ))} */}
         </ListGroup>
 
       </CardBody>
