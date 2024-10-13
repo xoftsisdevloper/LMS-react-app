@@ -15,6 +15,8 @@ import { useAuthcontext } from './contexts/Authcontext';
 import CourseList from './components/students-view/course/CourseList';
 import CourseDetails from './components/students-view/course/course-details';
 import StudentCourseList from './components/students-view/course/StudentCourseList';
+import CourseForm from './components/instructor/course/CourseForm';
+import InstructorCourseList from './components/instructor/course/CourseList';
 
 const App = () => {
   const { authUser } = useAuthcontext();
@@ -34,6 +36,9 @@ const App = () => {
           <Route path="/instructor" element={<Navigate to="/instructor/starter" />} />
           <Route path="/instructor/starter" element={<Starter />} />
           <Route path="/instructor/groups" element={<Groups />} />
+          <Route path="/instructor/courses" element={<InstructorCourseList />} />
+          <Route path="/instructor/create-course" element={<CourseForm />} />
+          <Route path="/instructor/edit-course/:courseId" element={<CourseForm />} />
         </Route>
 
         {/* Home route for regular users */}
