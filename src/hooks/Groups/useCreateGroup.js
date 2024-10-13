@@ -20,7 +20,7 @@ export const useCreateGroup = () => {
 
             if (!res.ok) {
                 const errorData = await res.json();
-                throw new Error(errorData.message);
+                throw new Error(errorData.error);
             }
 
             const data = await res.json();

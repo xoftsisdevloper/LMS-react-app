@@ -1,3 +1,4 @@
+// Import necessary modules from React and Reactstrap
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -13,17 +14,23 @@ import {
   FormGroup,
   Input,
   Label,
-  Row,
-  Col,
 } from 'reactstrap';
 import classnames from 'classnames';
 
+// Constants for Tab IDs
+const TABS = {
+  COURSE: 'course',
+  SUBJECTS: 'subjects',
+  MATERIALS: 'materials',
+};
+
 const CourseForm = () => {
-  const [activeTab, setActiveTab] = useState('course');
+  const [activeTab, setActiveTab] = useState(TABS.COURSE);
   const [courseData, setCourseData] = useState({
     name: '',
     description: '',
     duration: '',
+    imageUrl: '',
     subjects: [
       {
         name: '',
@@ -34,7 +41,7 @@ const CourseForm = () => {
     ],
   });
 
-  const { courseId } = useParams(); // Get the course ID from the URL
+  const { courseId } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,17 +51,15 @@ const CourseForm = () => {
         .get(`/api/courses/${courseId}`)
         .then((response) => {
           const fetchedCourseData = response.data;
-          console.log(fetchedCourseData, 'course data'); // Check the structure here
-          // Handle potential issues with fetched data
-          if (!fetchedCourseData.subjects || !Array.isArray(fetchedCourseData.subjects)) {
+          if (!Array.isArray(fetchedCourseData.subjects)) {
             fetchedCourseData.subjects = [];
           }
 
-          // Ensure materials are populated correctly
           setCourseData({
             name: fetchedCourseData.name || '',
             description: fetchedCourseData.description || '',
             duration: fetchedCourseData.duration || '',
+            imageUrl: fetchedCourseData.imageUrl || '',
             subjects: fetchedCourseData.subjects.map((subject) => ({
               name: subject.name || '',
               description: subject.description || '',
@@ -66,11 +71,14 @@ const CourseForm = () => {
                     content_type: material.content_type || '',
                     content_url: material.content_url || '',
                   })) 
-                : [{ name: '', description: '', content_type: '', content_url: '' }], // Fallback if no materials exist
+                : [{ name: '', description: '', content_type: '', content_url: '' }],
             })),
           });
         })
-        .catch((error) => console.error('Error fetching course data:', error));
+        .catch((error) => {
+          console.error('Error fetching course data:', error);
+          toast.error('Failed to load course data. Please try again.');
+        });
     }
   }, [courseId]);
 
@@ -78,30 +86,26 @@ const CourseForm = () => {
     e.preventDefault();
     try {
       if (courseId) {
-        // Update course
         await axios.put(`/api/courses/${courseId}`, courseData);
         toast.success('Course updated successfully!');
       } else {
-        // Create new course
         await axios.post('/api/courses/create-course', courseData);
         toast.success('Course created successfully!');
       }
       navigate('/instructor/courses');
     } catch (error) {
-      console.error('Error submitting form:', error, courseData);
+      console.error('Error submitting form:', error);
       const errorMessage = error.response?.data?.message || 'Error submitting form. Please try again.';
       toast.error(errorMessage);
     }
   };
 
-  // Handle change for subject fields
   const handleSubjectChange = (index, field, value) => {
     const updatedSubjects = [...courseData.subjects];
     updatedSubjects[index][field] = value;
     setCourseData({ ...courseData, subjects: updatedSubjects });
   };
 
-  // Handle change for materials within subjects
   const handleMaterialChange = (subjectIndex, materialIndex, field, value) => {
     const updatedSubjects = [...courseData.subjects];
     const updatedMaterials = [...updatedSubjects[subjectIndex].materials];
@@ -110,7 +114,6 @@ const CourseForm = () => {
     setCourseData({ ...courseData, subjects: updatedSubjects });
   };
 
-  // Add a new subject
   const addSubject = () => {
     setCourseData({
       ...courseData,
@@ -121,7 +124,6 @@ const CourseForm = () => {
     });
   };
 
-  // Add a new material under a subject
   const addMaterial = (subjectIndex) => {
     const updatedSubjects = [...courseData.subjects];
     updatedSubjects[subjectIndex].materials.push({ name: '', description: '', content_type: '', content_url: '' });
@@ -140,24 +142,24 @@ const CourseForm = () => {
       <Nav tabs>
         <NavItem>
           <NavLink
-            className={classnames({ active: activeTab === 'course' })}
-            onClick={() => toggleTab('course')}
+            className={classnames({ active: activeTab === TABS.COURSE })}
+            onClick={() => toggleTab(TABS.COURSE)}
           >
             Course
           </NavLink>
         </NavItem>
         <NavItem>
           <NavLink
-            className={classnames({ active: activeTab === 'subjects' })}
-            onClick={() => toggleTab('subjects')}
+            className={classnames({ active: activeTab === TABS.SUBJECTS })}
+            onClick={() => toggleTab(TABS.SUBJECTS)}
           >
             Subjects
           </NavLink>
         </NavItem>
         <NavItem>
           <NavLink
-            className={classnames({ active: activeTab === 'materials' })}
-            onClick={() => toggleTab('materials')}
+            className={classnames({ active: activeTab === TABS.MATERIALS })}
+            onClick={() => toggleTab(TABS.MATERIALS)}
           >
             Materials
           </NavLink>
@@ -166,7 +168,7 @@ const CourseForm = () => {
       <Form onSubmit={handleSubmit}>
         <TabContent activeTab={activeTab}>
           {/* Course Tab */}
-          <TabPane tabId="course">
+          <TabPane tabId={TABS.COURSE}>
             <FormGroup>
               <Label for="name">Course Name</Label>
               <Input
@@ -191,10 +193,29 @@ const CourseForm = () => {
                 onChange={(e) => setCourseData({ ...courseData, duration: e.target.value })}
               />
             </FormGroup>
+            <FormGroup>
+              <Label for="imageUrl">Image URL</Label>
+              <Input
+                type="text"
+                value={courseData.imageUrl}
+                onChange={(e) => setCourseData({ ...courseData, imageUrl: e.target.value })}
+              />
+            </FormGroup>
+            {/* Image Preview */}
+            {courseData.imageUrl && (
+              <div className="image-preview mt-2">
+                <Label>Image Preview:</Label>
+                <img
+                  src={courseData.imageUrl}
+                  alt="Course Preview"
+                  style={{ width: '100%', height: 'auto', maxHeight: '300px', objectFit: 'cover' }}
+                />
+              </div>
+            )}
           </TabPane>
 
           {/* Subjects Tab */}
-          <TabPane tabId="subjects">
+          <TabPane tabId={TABS.SUBJECTS}>
             {courseData.subjects.map((subject, subjectIndex) => (
               <div key={subjectIndex} className="mb-3">
                 <h4>Subject {subjectIndex + 1}</h4>
@@ -225,18 +246,24 @@ const CourseForm = () => {
                     onChange={(e) => handleSubjectChange(subjectIndex, 'duration', e.target.value)}
                   />
                 </FormGroup>
+                <Button color="danger" onClick={() => setCourseData({
+                  ...courseData,
+                  subjects: courseData.subjects.filter((_, index) => index !== subjectIndex),
+                })}>
+                  Remove Subject
+                </Button>
               </div>
             ))}
             <Button color="primary" onClick={addSubject}>Add Subject</Button>
           </TabPane>
 
           {/* Materials Tab */}
-          <TabPane tabId="materials">
+          <TabPane tabId={TABS.MATERIALS}>
             {courseData.subjects.map((subject, subjectIndex) => (
-              <div key={subjectIndex} className="mb-3">
-                <h4>Materials for Subject {subjectIndex + 1}</h4>
+              <div key={subjectIndex}>
+                <h4>Subject {subjectIndex + 1} Materials</h4>
                 {subject.materials.map((material, materialIndex) => (
-                  <div key={materialIndex} style={{ marginLeft: '20px' }}>
+                  <div key={materialIndex} className="mb-3">
                     <FormGroup>
                       <Label for={`material-name-${subjectIndex}-${materialIndex}`}>Material Name</Label>
                       <Input
@@ -256,37 +283,44 @@ const CourseForm = () => {
                       />
                     </FormGroup>
                     <FormGroup>
-                      <Label for={`material-content-type-${subjectIndex}-${materialIndex}`}>Content Type</Label>
+                      <Label for={`material-content_type-${subjectIndex}-${materialIndex}`}>Content Type</Label>
                       <Input
                         type="select"
-                        id={`material-content-type-${subjectIndex}-${materialIndex}`}
+                        id={`material-content_type-${subjectIndex}-${materialIndex}`}
                         value={material.content_type}
                         onChange={(e) => handleMaterialChange(subjectIndex, materialIndex, 'content_type', e.target.value)}
                       >
-                        <option value="">Select</option>
+                        <option value="">Select Content Type</option>
                         <option value="PDF">PDF</option>
                         <option value="Video">Video</option>
                         <option value="Document">Document</option>
                         <option value="Image">Image</option>
+                        {/* Add more content types as needed */}
                       </Input>
                     </FormGroup>
                     <FormGroup>
-                      <Label for={`material-content-url-${subjectIndex}-${materialIndex}`}>Content URL</Label>
+                      <Label for={`material-content_url-${subjectIndex}-${materialIndex}`}>Content URL</Label>
                       <Input
                         type="text"
-                        id={`material-content-url-${subjectIndex}-${materialIndex}`}
+                        id={`material-content_url-${subjectIndex}-${materialIndex}`}
                         value={material.content_url}
                         onChange={(e) => handleMaterialChange(subjectIndex, materialIndex, 'content_url', e.target.value)}
                       />
                     </FormGroup>
+                    <Button color="danger" onClick={() => {
+                      const updatedMaterials = subject.materials.filter((_, index) => index !== materialIndex);
+                      handleSubjectChange(subjectIndex, 'materials', updatedMaterials);
+                    }}>
+                      Remove Material
+                    </Button>
                   </div>
                 ))}
-                <Button color="secondary" onClick={() => addMaterial(subjectIndex)}>Add Material</Button>
+                <Button color="primary" onClick={() => addMaterial(subjectIndex)}>Add Material</Button>
               </div>
             ))}
           </TabPane>
         </TabContent>
-        <Button type="submit" color="success" className="mt-3">
+        <Button color="success" type="submit">
           {courseId ? 'Update Course' : 'Create Course'}
         </Button>
       </Form>

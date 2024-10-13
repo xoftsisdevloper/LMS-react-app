@@ -1,85 +1,54 @@
-import React, { useEffect, useState } from 'react';
-import { Table, Button, Card, CardBody, CardTitle, CardSubtitle, Modal, ModalHeader, ModalBody, ModalFooter, Input, FormGroup, Label } from 'reactstrap';
-import user1 from "../../assets/images/users/user1.jpg";
-import user2 from "../../assets/images/users/user2.jpg";
-import user3 from "../../assets/images/users/user3.jpg";
-import user4 from "../../assets/images/users/user4.jpg";
-import user5 from "../../assets/images/users/user5.jpg";
+import React, { useState, useEffect } from 'react';
+import { Table, Button, Card, CardBody, CardTitle, Modal, ModalHeader, ModalBody, ModalFooter, Input, FormGroup, Label } from 'reactstrap';
 import { useGroup } from '../../hooks/Groups/useGroups';
 import { useCreateGroup } from '../../hooks/Groups/useCreateGroup';
 import { useUpdateGroup } from '../../hooks/Groups/useUpdateGroup';
 
-
-const initialGroupsData = [
-  {
-    avatar: user1,
-    name: "Frontend Developers",
-    description: "Responsible for UI/UX",
-    duration: "6 months",
-    status: "Active",
-  },
-  {
-    avatar: user2,
-    name: "Backend Engineers",
-    description: "Handles server-side logic",
-    duration: "12 months",
-    status: "Active",
-  },
-  {
-    avatar: user3,
-    name: "QA Team",
-    description: "Testing and Quality Assurance",
-    duration: "3 months",
-    status: "Inactive",
-  },
-  {
-    avatar: user4,
-    name: "DevOps",
-    description: "Infrastructure automation",
-    duration: "9 months",
-    status: "Active",
-  },
-  {
-    avatar: user5,
-    name: "Design Team",
-    description: "Handles product design",
-    duration: "8 months",
-    status: "Active",
-  },
-];
-
 const Groups = () => {
-  const [groups, setGroups] = useState(initialGroupsData);
   const [newGroup, setNewGroup] = useState({ name: '', description: '', duration: '', status: 'Active' });
-  const [editIndex, setEditIndex] = useState(null);  // To track editing group index
+  const [editIndex, setEditIndex] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const {createGroup} = useCreateGroup();
-  const {UpdateGroup} = useUpdateGroup();
+  const [groups, setGroups] = useState([]); 
+  const { createGroup } = useCreateGroup();
+  const { UpdateGroup } = useUpdateGroup();
+  const { group: fetchedGroups } = useGroup(); 
 
-  const {group, loading} = useGroup();
+
+  useEffect(() => {
+    if (fetchedGroups) {
+      setGroups(fetchedGroups);
+    }
+  }, [fetchedGroups]);
+
 
   const toggleModal = () => setIsModalOpen(!isModalOpen);
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewGroup((prevGroup) => ({ ...prevGroup, [name]: value }));
   };
 
-  // Add or edit group
-  const saveGroup = () => {
+
+  const saveGroup = async () => {
     if (newGroup.name && newGroup.description && newGroup.duration && newGroup.status) {
       if (editIndex !== null) {
-        // Update existing group
-        const updatedGroups = [...group];
+      
+        await UpdateGroup(newGroup.name, newGroup.description, newGroup.duration, newGroup.status.toLowerCase(), newGroup._id);
+
+      
+        const updatedGroups = [...groups];
         updatedGroups[editIndex] = newGroup;
         setGroups(updatedGroups);
-        UpdateGroup(newGroup.name, newGroup.description, newGroup.duration, newGroup.status.toLowerCase(), newGroup._id);
       } else {
-        setGroups((prevGroups) => [...prevGroups, newGroup]);
-        createGroup(newGroup.name, newGroup.description, newGroup.duration, newGroup.status.toLowerCase());
+      
+        const createdGroup = await createGroup(newGroup.name, newGroup.description, newGroup.duration, newGroup.status.toLowerCase());
+        setGroups([...groups, createdGroup]);
       }
+
+    
       setNewGroup({ name: '', description: '', duration: '', status: 'Active' });
-      setEditIndex(null);  // Reset edit index
+      setEditIndex(null);
       toggleModal();
     } else {
       alert('Please fill all fields');
@@ -87,10 +56,9 @@ const Groups = () => {
   };
 
 
-  // Open modal for editing an existing group
   const editGroup = (index) => {
     setEditIndex(index);
-    setNewGroup(group[index]);
+    setNewGroup(groups[index]);
     toggleModal();
   };
 
@@ -98,22 +66,20 @@ const Groups = () => {
     <div>
       <Card>
         <CardBody>
-        <div className="d-flex justify-content-between align-items-center mb-3">
-            <div>
-                <CardTitle tag="h5">Groups </CardTitle>
-            </div>
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <CardTitle tag="h5">Groups</CardTitle>
             <Button
-                color="primary"
-                className="ms-auto"
-                onClick={() => {
+              color="primary"
+              onClick={() => {
                 setEditIndex(null);
+                setNewGroup({ name: '', description: '', duration: '', status: 'Active' });
                 toggleModal();
-                }}
+              }}
             >
-                Add Group
+              Add Group
             </Button>
-            </div>
-          <Table className="no-wrap mt-3 align-middle" responsive borderless>
+          </div>
+          <Table responsive borderless>
             <thead>
               <tr className="bg-primary text-white">
                 <th>Group</th>
@@ -123,40 +89,37 @@ const Groups = () => {
               </tr>
             </thead>
             <tbody>
-              {group.map((group, index) => (
-                <tr key={index} className="border-top">
-                  <td>
-                    <div className=" py-2">
-                      {/* <img
-                        src={group.avatar}
-                        className="rounded-circle"
-                        alt="avatar"
-                        width="45"
-                        height="45"
-                      /> */}
-                      <div className="">
+              {groups && groups.length > 0 ? (
+                groups.map((group, index) => (
+                  group && group.name ? (
+                    <tr key={index}>
+                      <td>
                         <h6 className="mb-0">{group.name}</h6>
                         <span className="text-muted">{group.description}</span>
-                      </div>
-                    </div>
-                  </td>
-                  {/* <td>{group.name}</td> */}
-                  {/* <td>{group.description}</td> */}
-                  <td>{group.duration} months</td>
-                  <td>
-                    {group.status === "active" ? (
-                      <span className="p-2 bg-success rounded-circle d-inline-block ms-3"></span>
-                    ) : (
-                      <span className="p-2 bg-danger rounded-circle d-inline-block ms-3"></span>
-                    )}
-                  </td>
-                  <td>
-                    <Button color="warning" size="sm" className="me-2" onClick={() => editGroup(index)}>
-                      Edit
-                    </Button>
+                      </td>
+                      <td>{group.duration} months</td>
+                      <td>
+                        {group.status === "active" ? (
+                          <span className="p-2 bg-success rounded-circle d-inline-block ms-3"></span>
+                        ) : (
+                          <span className="p-2 bg-danger rounded-circle d-inline-block ms-3"></span>
+                        )}
+                      </td>
+                      <td>
+                        <Button color="warning" size="sm" onClick={() => editGroup(index)}>
+                          Edit
+                        </Button>
+                      </td>
+                    </tr>
+                  ) : null
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" className="text-center">
+                    No groups available.
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </Table>
         </CardBody>
@@ -164,7 +127,9 @@ const Groups = () => {
 
       {/* Modal for adding/editing a group */}
       <Modal isOpen={isModalOpen} toggle={toggleModal}>
-        <ModalHeader toggle={toggleModal}>{editIndex !== null ? 'Edit Group' : 'Add New Group'}</ModalHeader>
+        <ModalHeader toggle={toggleModal}>
+          {editIndex !== null ? 'Edit Group' : 'Add New Group'}
+        </ModalHeader>
         <ModalBody>
           <FormGroup>
             <Label for="name">Group Name</Label>
