@@ -1,99 +1,95 @@
-import React from 'react'
+import React from 'react';
 import {
-    Navbar,
-    Collapse,
-    Nav,
-    NavItem,
-    NavbarBrand,
-    UncontrolledDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
-    Dropdown,
-    Button,
-  } from "reactstrap";
+  Navbar,
+  Collapse,
+  Nav,
+  NavbarBrand,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  Button,
+} from "reactstrap";
 import Logo from '../../layouts/Logo';
 import { ReactComponent as LogoWhite } from "../../assets/images/logos/materialprowhite.svg";
 import user1 from "../../assets/images/users/user4.jpg";
 import useLogout from '../../hooks/uselogout';
 import { useNavigate } from 'react-router-dom';
+
 const StudentHeader = () => {
-    const navigate = useNavigate()
-    const [isOpen, setIsOpen] = React.useState(false);
+  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [dropdownOpen, setDropdownOpen] = React.useState(false);
+  const { logout } = useLogout();
 
-    const [dropdownOpen, setDropdownOpen] = React.useState(false);
-    const { logout, loading } = useLogout()
+  const toggle = () => setDropdownOpen((prevState) => !prevState);
+  const handleToggle = () => setIsOpen(!isOpen);
+  
+  const showMobileMenu = () => {
+    document.getElementById("sidebarArea").classList.toggle("showSidebar");
+  };
 
-    const toggle = () => setDropdownOpen((prevState) => !prevState);
-    const Handletoggle = () => {
-        setIsOpen(!isOpen);
-    };
-    const showMobilemenu = () => {
-        document.getElementById("sidebarArea").classList.toggle("showSidebar");
-    };
-    return (
-        <Navbar color="primary" expand="md" className="fix-header">
-        <div className="d-flex align-items-center">
-            <div className="d-lg-block d-none me-5 pe-3 site_name">
-            <Logo  />
-            </div>
-            <NavbarBrand href="/">
-            <LogoWhite className=" d-lg-none" />
-            </NavbarBrand>
-            <Button
-            color="secondary"
-            className=" d-lg-none"
-            onClick={() => showMobilemenu()}
-            >
-            <i className="bi bi-list"></i>
-            </Button>
+  return (
+    <Navbar color="primary" expand="md" className="fix-header py-2">
+      <div className="d-flex align-items-center">
+        <div className="d-lg-block d-none me-5 pe-3 site_name">
+          <Logo />
         </div>
-        <div className="hstack gap-2">
-            <Button
-            color="primary"
-            size="sm"
-            className="d-sm-block d-md-none"
-            onClick={Handletoggle}
-            >
-            {isOpen ? (
-                <i className="bi bi-x"></i>
-            ) : (
-                <i className="bi bi-three-dots-vertical"></i>
-            )}
-            </Button>
-        </div>
+        <NavbarBrand href="/">
+          <LogoWhite className="d-lg-none" />
+        </NavbarBrand>
         <Button
-
-        onClick={()=> navigate('/courses')}
-        >Explore courses</Button>
+          color="secondary"
+          className="d-lg-none"
+          onClick={showMobileMenu}
+        >
+          <i className="bi bi-list"></i>
+        </Button>
+      </div>
+      
+      <div className="hstack gap-2">
         <Button
-        onClick={()=> navigate('/student-courses')}
-        > My courses</Button>
-        <Collapse navbar isOpen={isOpen}>
-            <Nav className="me-auto" navbar>
-            </Nav>
-            <Dropdown isOpen={dropdownOpen} toggle={toggle}>
-            <DropdownToggle color="transparent">
-                <img
-                src={user1}
-                alt="profile"
-                className="rounded-circle"
-                width="30"
-                ></img>
-            </DropdownToggle>
-            <DropdownMenu>
-                <DropdownItem header>Info</DropdownItem>
-                <DropdownItem>My Account</DropdownItem>
-                <DropdownItem>Edit Profile</DropdownItem>
-                <DropdownItem divider />
-                <DropdownItem>My Balance</DropdownItem>
-                <DropdownItem>Inbox</DropdownItem>
-                <DropdownItem onClick={logout}>Logout</DropdownItem>
-            </DropdownMenu>
-            </Dropdown>
-        </Collapse>
-        </Navbar>
-    );
+          color="primary"
+          size="sm"
+          className="d-sm-block d-md-none"
+          onClick={handleToggle}
+        >
+          {isOpen ? <i className="bi bi-x"></i> : <i className="bi bi-three-dots-vertical"></i>}
+        </Button>
+        <Button color="light" onClick={() => navigate('/courses')}>
+          <i className="bi bi-book-fill me-1"></i> Explore Courses
+        </Button>
+        <Button color="light" onClick={() => navigate('/student-courses')}>
+          <i className="bi bi-folder-fill me-1"></i> My Courses
+        </Button>
+      </div>
+      
+      <Collapse navbar isOpen={isOpen}>
+        <Nav className="me-auto" navbar>
+          {/* Additional Nav Items can go here */}
+        </Nav>
+        <UncontrolledDropdown isOpen={dropdownOpen} toggle={toggle}>
+          <DropdownToggle color="transparent" className="p-0">
+            <img
+              src={user1}
+              alt="profile"
+              className="rounded-circle"
+              width="40"
+            />
+          </DropdownToggle>
+          <DropdownMenu right>
+            <DropdownItem header>Account Info</DropdownItem>
+            <DropdownItem onClick={() => navigate('/my-account')}>My Account</DropdownItem>
+            <DropdownItem onClick={() => navigate('/edit-profile')}>Edit Profile</DropdownItem>
+            <DropdownItem divider />
+            <DropdownItem onClick={() => navigate('/my-balance')}>My Balance</DropdownItem>
+            <DropdownItem onClick={() => navigate('/inbox')}>Inbox</DropdownItem>
+            <DropdownItem onClick={logout}>Logout</DropdownItem>
+          </DropdownMenu>
+        </UncontrolledDropdown>
+      </Collapse>
+    </Navbar>
+  );
 }
 
-export default StudentHeader
+export default StudentHeader;
