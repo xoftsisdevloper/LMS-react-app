@@ -38,3 +38,20 @@ table th {
 .table-borderless>:not(:first-child) {
   border-top-width: 0;
 }
+
+#course-home-card-img {
+  height: 200px !important;
+  opacity: 0.5;
+}
+
+#home-list-course .card-body {
+  min-height: 180px;
+}
+
+.truncate-3-lines {
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Show only 3 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useStudentContext } from '../../../contexts/Student-context';
 import { courseListService } from '../../../service/baseService';
+import  defaultIMG from "../../../assets/images/default_images/Skill Pointer.png"
 import {
     Card,
     CardBody,
@@ -29,7 +30,7 @@ const CourseList = () => {
 
     return (
         <Container className="mt-4">
-            <h2 className="text-center mb-4">Course List</h2>
+            <h2 className=" mb-4">Course List</h2>
             {studentCoursesList ? (
                 studentCoursesList.length > 0 ? (
                     <Row>
@@ -37,22 +38,22 @@ const CourseList = () => {
                             <Col key={course.id || course.name} sm="12" md="6" lg="4" className="mb-4">
                                 <Card className="course-card h-100">
                                     <img
-                                        src={course.imageUrl || 'https://via.placeholder.com/300'}
+                                        src={defaultIMG}
                                         alt={course.name}
                                         className="card-img-top"
-                                        style={{ borderTopLeftRadius: '8px', borderTopRightRadius: '8px' }}
+                                        style={{ borderTopLeftRadius: '8px', borderTopRightRadius: '8px', height: 250, opacity: 0.5 }}
                                     />
                                     <CardBody>
                                         <CardTitle tag="h5">{course.name}</CardTitle>
                                         <ReactStarRatings
-                                            rating={course.rating || 0}
+                                            rating={course.rating || 4}
                                             starRatedColor="gold"
                                             numberOfStars={5}
                                             name='rating'
                                             starDimension="20px"
                                             starSpacing="2px"
                                         />
-                                        <CardText>{course.description}</CardText>
+                                        <CardText className='mt-2'>{course.description}</CardText>
                                         <CardText>
                                             <strong>Duration:</strong> {course.duration} weeks
                                         </CardText>
