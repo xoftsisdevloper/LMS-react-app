@@ -24,3 +24,18 @@ export const studentCourseListService = async (id) => {
 
     return data
   }
+
+  export const submitCommentService = async () => {
+    const data = await axios.post(`/api/comments`)
+    return data
+  }
+
+  export const submitRatingService = async (id, rating, comment) => {
+    const data = await axios.post(`/api/courses/${id}/rate`, { rating, comment })
+    return data
+  }
+
+  export const fetchRating = async (id) => {
+    const data = await axios.get(`/api/courses/${id}/ratings`)
+    return data
+  }

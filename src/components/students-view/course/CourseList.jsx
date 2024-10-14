@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useStudentContext } from '../../../contexts/Student-context';
-import { courseListService } from '../../../service/baseService';
+import { courseListService, fetchRating } from '../../../service/baseService';
 import  defaultIMG from "../../../assets/images/default_images/Skill Pointer.png"
 import {
     Card,
@@ -17,6 +17,7 @@ import ReactStarRatings from 'react-star-ratings';
 
 const CourseList = () => {
     const { studentCoursesList, setStudentCoursesList } = useStudentContext();
+    const [rating, setRating] = useState(0);
 
     const fetchCourseList = async () => {
         const res = await courseListService();
@@ -27,6 +28,13 @@ const CourseList = () => {
         fetchCourseList();
         return () => setStudentCoursesList([]);
     }, []);
+
+    const getRating = async(id) => {
+        const response = await fetchRating(id)
+        console.log(response);
+
+        return response
+    }
 
     return (
         <Container className="mt-4">
@@ -46,12 +54,13 @@ const CourseList = () => {
                                     <CardBody>
                                         <CardTitle tag="h5">{course.name}</CardTitle>
                                         <ReactStarRatings
-                                            rating={course.rating || 4}
+                                            rating={rating || 4}
                                             starRatedColor="gold"
                                             numberOfStars={5}
                                             name='rating'
                                             starDimension="20px"
                                             starSpacing="2px"
+                                            getRating={() => getRating(course._id)}
                                         />
                                         <CardText className='mt-2'>{course.description}</CardText>
                                         <CardText>
