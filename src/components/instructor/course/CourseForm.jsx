@@ -136,9 +136,10 @@ const CourseForm = () => {
     }
   };
 
+
   return (
     <div className="container mt-4">
-      <h1>{courseId ? 'Edit Course' : 'Create Course'}</h1>
+      <h2 style={{textDecoration: 'none', marginBottom: '1rem'}}>{courseId ? 'Edit Course' : 'Create Course'}</h2>
       <Nav tabs>
         <NavItem>
           <NavLink
@@ -168,12 +169,13 @@ const CourseForm = () => {
       <Form onSubmit={handleSubmit}>
         <TabContent activeTab={activeTab}>
           {/* Course Tab */}
-          <TabPane tabId={TABS.COURSE}>
+          <TabPane tabId={TABS.COURSE} style={{cursor: 'pointer', padding: '20px'}}>
             <FormGroup>
               <Label for="name">Course Name</Label>
               <Input
                 type="text"
                 value={courseData.name}
+                className = "form-control"
                 onChange={(e) => setCourseData({ ...courseData, name: e.target.value })}
               />
             </FormGroup>
@@ -182,6 +184,7 @@ const CourseForm = () => {
               <Input
                 type="textarea"
                 value={courseData.description}
+                className = "form-control"
                 onChange={(e) => setCourseData({ ...courseData, description: e.target.value })}
               />
             </FormGroup>
@@ -190,6 +193,7 @@ const CourseForm = () => {
               <Input
                 type="number"
                 value={courseData.duration}
+                className = "form-control"
                 onChange={(e) => setCourseData({ ...courseData, duration: e.target.value })}
               />
             </FormGroup>
@@ -198,6 +202,7 @@ const CourseForm = () => {
               <Input
                 type="text"
                 value={courseData.imageUrl}
+                className = "form-control"
                 onChange={(e) => setCourseData({ ...courseData, imageUrl: e.target.value })}
               />
             </FormGroup>
@@ -215,10 +220,18 @@ const CourseForm = () => {
           </TabPane>
 
           {/* Subjects Tab */}
-          <TabPane tabId={TABS.SUBJECTS}>
+          <TabPane tabId={TABS.SUBJECTS} style={{padding: '20px'}}>
             {courseData.subjects.map((subject, subjectIndex) => (
               <div key={subjectIndex} className="mb-3">
-                <h4>Subject {subjectIndex + 1}</h4>
+                <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                  <h4>Subject {subjectIndex + 1}</h4>
+                  <Button color="danger" onClick={() => setCourseData({
+                    ...courseData,
+                    subjects: courseData.subjects.filter((_, index) => index !== subjectIndex),
+                  })}>
+                    <i class="bi bi-x-circle-fill"></i>
+                  </Button>
+                </div>
                 <FormGroup>
                   <Label for={`subject-name-${subjectIndex}`}>Subject Name</Label>
                   <Input
@@ -246,19 +259,14 @@ const CourseForm = () => {
                     onChange={(e) => handleSubjectChange(subjectIndex, 'duration', e.target.value)}
                   />
                 </FormGroup>
-                <Button color="danger" onClick={() => setCourseData({
-                  ...courseData,
-                  subjects: courseData.subjects.filter((_, index) => index !== subjectIndex),
-                })}>
-                  Remove Subject
-                </Button>
+                
               </div>
             ))}
-            <Button color="primary" onClick={addSubject}>Add Subject</Button>
+            <Button color="primary" onClick={addSubject}><i class="bi bi-plus-circle-fill"></i> Add</Button>
           </TabPane>
 
           {/* Materials Tab */}
-          <TabPane tabId={TABS.MATERIALS}>
+          <TabPane tabId={TABS.MATERIALS} style={{padding: '20px'}}>
             {courseData.subjects.map((subject, subjectIndex) => (
               <div key={subjectIndex}>
                 <h4>Subject {subjectIndex + 1} Materials</h4>
@@ -311,11 +319,11 @@ const CourseForm = () => {
                       const updatedMaterials = subject.materials.filter((_, index) => index !== materialIndex);
                       handleSubjectChange(subjectIndex, 'materials', updatedMaterials);
                     }}>
-                      Remove Material
+                      <i class="bi bi-x-circle-fill"></i>
                     </Button>
                   </div>
                 ))}
-                <Button color="primary" onClick={() => addMaterial(subjectIndex)}>Add Material</Button>
+                <Button color="primary" onClick={() => addMaterial(subjectIndex)}><i class="bi bi-plus-circle-fill"></i> Add</Button>
               </div>
             ))}
           </TabPane>

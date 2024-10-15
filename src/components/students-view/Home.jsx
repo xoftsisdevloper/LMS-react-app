@@ -12,7 +12,10 @@ import {
   Button,
 } from "reactstrap";
 import { useCourse } from "../../hooks/Courses/useCourses";
-import defaultIMG from "../../assets/images/default_images/Skill Pointer.png"
+import defaultIMG from "../../assets/images/default_images/Skill Pointer (1).png";
+import TestimonialSlider from "./TestimonialSlider";
+import AboutUs from "./About-us";
+import ContactUs from "./Contact-us";
 
 const Home = () => {
   const name = "LMS Platform";
@@ -35,7 +38,7 @@ const Home = () => {
   return (
     <>
       {/* Hero Section */}
-      <div className="bg-primary text-white text-center py-5">
+      <div className=" text-white text-center py-5 home-banner d-flex justify-content-center align-items-center" style={{ backgroundRepeat: "no-repeat", backgroundBlendMode: "overlay", backgroundColor: "#000000bd"}}>
         <Container>
           <h1 className="display-4">Unlock Your Potential</h1>
           <p className="lead">
@@ -43,17 +46,20 @@ const Home = () => {
           </p>
           <Button
             color="light"
-            className="btn-lg"
+            className="btn-lg me-2"
             onClick={() => handleNavigation("/courses")}
           >
             Get Started
+          </Button>
+          <Button color="light" onClick={() => navigate("/courses")} className="btn-lg me-2">
+             Explore Courses
           </Button>
         </Container>
       </div>
 
       {/* Featured Courses Section */}
-      <Container className="my-4">
-        <h2 className="text-center">Featured Courses</h2>
+      <Container className="mt-4">
+        <h2 className="text-center mb-4">Featured Courses</h2>
         <Row>
           {firstFourCourses.map((crs) => (
             <Col sm="6" md="3" key={crs._id} id="home-list-course">
@@ -69,31 +75,28 @@ const Home = () => {
         </Row>
 
         {/* Testimonials Section */}
-        <h2 className="text-center mt-5">What Our Students Say</h2>
-        <Row>
-          {Array.from({ length: 3 }).map((_, index) => (
-            <Col md="4" key={index}>
-              <Card className="mb-4 text-center">
-                <CardBody>
-                  <CardText>
-                    <em>"This platform changed my career path!"</em>
-                  </CardText>
-                  <CardTitle tag="h5"> — {student_name_array[index]}</CardTitle>
-                </CardBody>
-              </Card>
-            </Col>
-          ))}
+        <h2 className="text-center my-4">What Our Students Say</h2>
+        <Row className="mb-4">          
+            <Col md="12">
+              <TestimonialSlider />              
+            </Col>          
         </Row>
 
+        <Row className="mb-4">          
+            <Col md="12">
+              <AboutUs />              
+            </Col>          
+        </Row>
+
+        
+
         {/* Call to Action Section */}
-        <div className="text-center mt-5 py-5 bg-light">
-          <h2>Join Us Today!</h2>
-          <p>Sign up now and start your learning journey with us.</p>
-          <Button color="primary" className="btn-lg" onClick={() => handleNavigation("/signup")}>
-            Sign Up
-          </Button>
-        </div>
       </Container>
+      <Row className="mb-0">          
+            <Col md="12">
+              <ContactUs />              
+            </Col>          
+        </Row>
     </>
   );
 };

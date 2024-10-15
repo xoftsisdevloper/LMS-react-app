@@ -32,10 +32,10 @@ const Header = () => {
     document.getElementById("sidebarArea").classList.toggle("showSidebar");
   };
   return (
-    <Navbar color="primary" dark expand="md" className="fix-header">
+    <Navbar color="primary" dark expand="md" className="fix-header p-0">
       <div className="d-flex align-items-center">
         <div className="d-lg-block d-none me-5 pe-3 site_name">
-          <Logo  />
+          <Logo  className = "h-100" />
         </div>
         <NavbarBrand href="/">
           <LogoWhite className=" d-lg-none" />

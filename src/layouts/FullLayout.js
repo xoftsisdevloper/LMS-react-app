@@ -7,7 +7,7 @@ const FullLayout = () => {
   return (
     <main>
       {/********header**********/}
-      <Header />
+      <Header/>
       <div className="pageWrapper d-lg-flex">
         {/********Sidebar**********/}
         <aside className="sidebarArea shadow" id="sidebarArea">

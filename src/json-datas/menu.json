@@ -7,17 +7,12 @@
     {
       "title": "Group",
       "href": "/instructor/groups",
-      "icon": "bi bi-bell"
+      "icon": "bi bi-person-lines-fill"
     },
     {
       "title": "Course",
       "href": "/instructor/courses",
-      "icon": "bi bi-patch-check"
-    },
-    {
-      "title": "Subjects",
-      "href": "/instructor/subjects",
-      "icon": "bi bi-hdd-stack"
+      "icon": "bi bi-book-half"
     }
   ] 
   

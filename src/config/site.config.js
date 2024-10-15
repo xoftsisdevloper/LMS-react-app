@@ -1,7 +1,7 @@
 import React from "react";
 
 const site_config = {
-    name: "SKILL POINTER"
+    name: "CodeFlux"
 }
 
 export default site_config;

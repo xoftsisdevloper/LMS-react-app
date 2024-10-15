@@ -55,3 +55,27 @@ table th {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.home-banner {
+  height: 660px;
+  background-image: url('../../images/home_bg.jpg');
+  background-size: cover;
+  background-position: top center;
+}
+
+.img-container {
+  background-image: url('../../images/bg/code-8779051_1280.png');
+}
+
+h2, .custom-decaration {
+ text-decoration: underline;
+ text-underline-offset: 8px;
+ text-decoration-color: #016A70;
+ text-decoration-thickness: percentage($number: 0.1);
+ text-decoration-skip: random($limit: 1) ;
+}
+
+.nav-tabs .nav-item .active {
+  background-color: #016A70;
+  color: #fff;
+}

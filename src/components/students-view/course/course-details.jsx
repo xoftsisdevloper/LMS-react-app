@@ -43,6 +43,7 @@ const CourseDetails = () => {
     return () => setStudentCourse(null);
   }, [id]);
 
+
   return (
     <div className="container mt-4">
       {studentCourse && (
@@ -50,8 +51,8 @@ const CourseDetails = () => {
           <h3 className="mt-4">Course Detail</h3>
           <Card className="mb-4">
             <CardBody className="p-4">
-              <CardTitle tag="h2">{studentCourse.name}</CardTitle>
-              <CardSubtitle className="mb-2 text-muted" tag="h5">
+              <CardTitle tag="h2" style={{textDecoration: 'none'}}>{studentCourse.name} <span>{}</span></CardTitle>
+              <CardSubtitle className="mb-3 mt-4 text-muted custom-decaration " tag="h5">
                 Course Details
               </CardSubtitle>
               <CardText>{studentCourse.description}</CardText>
@@ -69,7 +70,7 @@ const CourseDetails = () => {
           <ListGroup>
             <Row>
               {studentCourse.subjects.map((subject) => (
-                <Col md="4" >
+                <Col md="6" >
                   <ListGroupItem key={subject._id} className="mb-3" style={{boxShadow: " 0px 1px 5px 2px rgba(0,0,0,0.27"}}>
                     <Card style={{boxShadow: "none"}}>
                       <CardBody>
@@ -80,7 +81,7 @@ const CourseDetails = () => {
                           {subject.materials.map((material) => (
                             <ListGroupItem
                               key={material._id}
-                              className="d-flex justify-content-between align-items-center"
+                              className=""
                             >
                               <div className="flex-grow-1">
                                 <strong>{material.name}</strong> -{" "}

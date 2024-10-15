@@ -77,15 +77,15 @@ const GroupList = () => {
                                             )}
                                         </td>
                                         <td>
-                                            <Link to={`/instructor/edit-group/${group._id}`}>
-                                                <Button color="warning" size="sm">Edit</Button>
+                                            <Link to={`/instructor/edit-group/${group._id}`} className='me-1'>
+                                                <Button color="warning" size="sm"><i className='bi bi-pen-fill'></i></Button>
                                             </Link>
                                             <Button 
                                                 color="danger" 
                                                 size="sm" 
                                                 onClick={() => removeGroup(group._id)}
                                             >
-                                                Delete
+                                                <i className='bi bi-trash'></i>
                                             </Button>
                                         </td>
                                     </tr>

@@ -57,7 +57,7 @@ const CourseList = () => {
                                 </Link>
                             </div>
                             {courses.length > 0 ? (
-                                <Table striped>
+                                <Table borderless>
                                     <thead>
                                         <tr>
                                             <th>Name</th>
@@ -72,9 +72,9 @@ const CourseList = () => {
                                                 <td>{course.description}</td>
                                                 <td>
                                                     <Link to={`/instructor/edit-course/${course._id}`}>
-                                                        <Button color="warning" className="me-2">Edit</Button>
+                                                        <Button color="warning" className="me-2"><i className='bi bi-pen-fill'></i></Button>
                                                     </Link>
-                                                    <Button color="danger" onClick={() => handleDelete(course._id)}>Delete</Button>
+                                                    <Button color="danger" onClick={() => handleDelete(course._id)}><i className='bi bi-trash-fill'></i></Button>
                                                 </td>
                                             </tr>
                                         ))}
