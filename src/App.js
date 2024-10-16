@@ -19,6 +19,7 @@ import CourseForm from './components/instructor/course/CourseForm';
 import InstructorCourseList from './components/instructor/course/CourseList';
 import GroupList from './components/instructor/group/GroupList';
 import GroupForm from './components/instructor/group/GroupForm';
+import ExploreDetails from './components/students-view/course/ExploreDetails';
 
 const App = () => {
   const { authUser } = useAuthcontext();
@@ -58,6 +59,8 @@ const App = () => {
           <Route path="/courses" element={<CourseList />} />
           <Route path="/student-courses" element={<StudentCourseList />} />
           <Route path="/course/details/:id" element={<CourseDetails />} />
+          <Route path="/course/explore-details/:id" element={<ExploreDetails />} />
+
           <Route path="/home" element={<Home />} />
         </Route>
 

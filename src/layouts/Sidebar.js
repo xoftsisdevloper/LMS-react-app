@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import user1 from "../assets/images/users/user4.jpg";
 import probg from "../assets/images/bg/download.jpg";
 import navigation from '../json-datas/menu.json';
+import { useAuthcontext } from "../contexts/Authcontext";
 
 
 const Sidebar = () => {
@@ -10,6 +11,7 @@ const Sidebar = () => {
     document.getElementById("sidebarArea").classList.toggle("showSidebar");
   };
   let location = useLocation();
+  const { authUser } = useAuthcontext();
 
   return (
     <div>
@@ -28,7 +30,7 @@ const Sidebar = () => {
             <i className="bi bi-x"></i>
           </Button>
         </div>
-        <div className="bg-dark text-white p-2 opacity-75">Steave Rojer</div>
+        <div className="bg-dark text-white p-2 opacity-75">{authUser.user.username}</div>
       </div>
       <div className="p-3 mt-2">
         <Nav vertical className="sidebarNav">

@@ -17,12 +17,14 @@ import Logo from "./Logo";
 import { ReactComponent as LogoWhite } from "../assets/images/logos/materialprowhite.svg";
 import user1 from "../assets/images/users/user4.jpg";
 import useLogout from "../hooks/uselogout";
+import { useAuthcontext } from "../contexts/Authcontext";
 
 const Header = () => {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
-  const { logout, loading } = useLogout()
+  const { logout, loading } = useLogout();
+  const { authUser } = useAuthcontext();
 
   const toggle = () => setDropdownOpen((prevState) => !prevState);
   const Handletoggle = () => {
@@ -35,7 +37,7 @@ const Header = () => {
     <Navbar color="primary" dark expand="md" className="fix-header p-0">
       <div className="d-flex align-items-center">
         <div className="d-lg-block d-none me-5 pe-3 site_name">
-          <Logo  className = "h-100" />
+          <Logo className="h-100" />
         </div>
         <NavbarBrand href="/">
           <LogoWhite className=" d-lg-none" />
@@ -72,16 +74,12 @@ const Header = () => {
               src={user1}
               alt="profile"
               className="rounded-circle"
-              width="30"
+              width="40"
             ></img>
+            <span className="mx-2 text-capitalize h6 text-white" > {authUser.user.username}</span>
+
           </DropdownToggle>
           <DropdownMenu>
-            <DropdownItem header>Info</DropdownItem>
-            <DropdownItem>My Account</DropdownItem>
-            <DropdownItem>Edit Profile</DropdownItem>
-            <DropdownItem divider />
-            <DropdownItem>My Balance</DropdownItem>
-            <DropdownItem>Inbox</DropdownItem>
             <DropdownItem onClick={logout}>Logout</DropdownItem>
           </DropdownMenu>
         </Dropdown>

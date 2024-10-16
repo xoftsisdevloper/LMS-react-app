@@ -1,6 +1,10 @@
 .pageWrapper {
   min-height: 100vh;
 }
+
+body {
+  overflow-x: hidden;
+}
 .contentArea {
   flex-grow: 1;
   max-width: 1300px;
@@ -41,7 +45,6 @@ table th {
 
 #course-home-card-img {
   height: 200px !important;
-  opacity: 0.5;
 }
 
 #home-list-course .card-body {

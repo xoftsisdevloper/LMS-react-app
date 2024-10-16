@@ -16,6 +16,7 @@ import {
   CardText,
   Spinner,
   Button,
+  CardImg,
 } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
@@ -75,6 +76,7 @@ const StudentCourseList = () => {
               <Col md="4" key={course._id || course.name} className="mb-4">
                 <Card className="shadow-sm">
                   <CardBody>
+                    <CardImg top src={course.imageUrl} alt={course.title} id="course-home-card-img" className='mb-3' />
                     <CardTitle tag="h5">{course.name}</CardTitle>
                     <CardText>{course.description || 'No description available.'}</CardText>
 

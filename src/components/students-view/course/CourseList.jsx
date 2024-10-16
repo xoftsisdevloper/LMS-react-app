@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useStudentContext } from '../../../contexts/Student-context';
-import { courseListService, fetchRating } from '../../../service/baseService';
-import  defaultIMG from "../../../assets/images/default_images/Skill Pointer.png"
+import { courseListService } from '../../../service/baseService';
+import defaultIMG from "../../../assets/images/default_images/Skill Pointer.png"
 import {
     Card,
     CardBody,
@@ -17,11 +17,15 @@ import ReactStarRatings from 'react-star-ratings';
 
 const CourseList = () => {
     const { studentCoursesList, setStudentCoursesList } = useStudentContext();
-    const [rating, setRating] = useState(0);
-
+    
     const fetchCourseList = async () => {
         const res = await courseListService();
-        setStudentCoursesList(res?.data);
+        const sortedCourses = res?.data?.sort((a, b) => {
+            const avgRatingA = CalculateRating(a.ratings);
+            const avgRatingB = CalculateRating(b.ratings);
+            return avgRatingB - avgRatingA; // Sort in descending order
+        });
+        setStudentCoursesList(sortedCourses);
     };
 
     useEffect(() => {
@@ -29,16 +33,53 @@ const CourseList = () => {
         return () => setStudentCoursesList([]);
     }, []);
 
-    const getRating = async(id) => {
-        const response = await fetchRating(id)
-        console.log(response);
+    const CalculateRating = (courseRating) => {
+        if (!courseRating || courseRating.length === 0) {
+            return 0; 
+        }
 
-        return response
+        const totalRating = courseRating.reduce((sum, { rating }) => sum + rating, 0);
+        const averageRating = totalRating / courseRating.length; // Use the correct length for averaging
+        return averageRating; 
+    };
+    const covertTime = (time) => {
+        const hours = parseFloat(time)
+
+        const days = Math.floor(hours / 24);  // Calculate the number of full days
+        const remainingHours = hours % 24;    // Calculate the remaining hours after days
+
+    
+        
+        if (days >= 7){
+            const weeks = days % 7 ;
+            const week = Math.floor(days / 7);
+            const remainingDays = days % 7;
+            const cuntWeeks = (week > 1) ? 'weeks' : 'week'
+
+            
+            if (remainingDays == 0) {
+                return `${week} ${cuntWeeks}`;
+            }
+            else {
+                return `${week} ${cuntWeeks} and ${remainingDays} days`;
+            }
+        }
+        else {
+            if (days == 0) {
+                return `${remainingHours} hours`;
+            }
+            else if (remainingHours == 0) {
+                return `${days} days`;
+            }
+            else {
+                return `${days} days and ${remainingHours} hours`;
+            }
+            
+        }
     }
-
     return (
         <Container className="mt-4">
-            <h2 className=" mb-4">Course List</h2>
+            <h2 className="mb-4">Course List</h2>
             {studentCoursesList ? (
                 studentCoursesList.length > 0 ? (
                     <Row>
@@ -53,23 +94,25 @@ const CourseList = () => {
                                     />
                                     <CardBody>
                                         <CardTitle tag="h5">{course.name}</CardTitle>
-                                        <ReactStarRatings
-                                            rating={rating || 4}
+                                        
+                                        <CardText className='mt-2'>{course.description}</CardText>
+                                        <CardText>
+                                            <strong>Duration:</strong> {covertTime(course.duration)} 
+                                        </CardText>
+                                        <CardText >
+                                        <strong>Rating : </strong><ReactStarRatings
+                                            rating={CalculateRating(course.ratings) || 0}
                                             starRatedColor="gold"
                                             numberOfStars={5}
                                             name='rating'
                                             starDimension="20px"
                                             starSpacing="2px"
-                                            getRating={() => getRating(course._id)}
                                         />
-                                        <CardText className='mt-2'>{course.description}</CardText>
-                                        <CardText>
-                                            <strong>Duration:</strong> {course.duration} weeks
                                         </CardText>
-                                        <CardText>
+                                        <CardText className='text-capitalize'>
                                             <strong>Status:</strong> {course.status}
                                         </CardText>
-                                        <Button color="primary" className="mt-2" href={`/course/details/${course._id}`}>
+                                        <Button color="primary" className="mb-3" href={`/course/explore-details/${course._id}`} style={{position: 'absolute', bottom: '0%'}}>
                                             View Course
                                         </Button>
                                     </CardBody>

@@ -44,14 +44,7 @@ const Home = () => {
           <p className="lead">
             Explore a wide range of courses and boost your career.
           </p>
-          <Button
-            color="light"
-            className="btn-lg me-2"
-            onClick={() => handleNavigation("/courses")}
-          >
-            Get Started
-          </Button>
-          <Button color="light" onClick={() => navigate("/courses")} className="btn-lg me-2">
+          <Button color="light" onClick={() => navigate("/courses")} className="btn-lg">
              Explore Courses
           </Button>
         </Container>
@@ -60,11 +53,11 @@ const Home = () => {
       {/* Featured Courses Section */}
       <Container className="mt-4">
         <h2 className="text-center mb-4">Featured Courses</h2>
-        <Row>
+        <Row className="justify-content-center">
           {firstFourCourses.map((crs) => (
             <Col sm="6" md="3" key={crs._id} id="home-list-course">
               <Card className="mb-4">
-                <CardImg top src={defaultIMG} alt={course.title} id="course-home-card-img"  />
+                <CardImg top src={crs.imageUrl} alt={course.title} id="course-home-card-img"  />
                 <CardBody>
                   <CardTitle tag="h5">{crs.name}</CardTitle>
                   <CardText className="truncate-3-lines">{crs.description}</CardText>

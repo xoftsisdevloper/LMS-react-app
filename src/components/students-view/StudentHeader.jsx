@@ -15,12 +15,14 @@ import { ReactComponent as LogoWhite } from "../../assets/images/logos/materialp
 import user1 from "../../assets/images/users/user4.jpg";
 import useLogout from "../../hooks/uselogout";
 import { useNavigate } from "react-router-dom";
+import { useAuthcontext } from "../../contexts/Authcontext";
 
 const StudentHeader = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = React.useState(false);
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
   const { logout } = useLogout();
+  const { authUser } = useAuthcontext();
 
   const toggle = () => setDropdownOpen((prevState) => !prevState);
   const handleToggle = () => setIsOpen(!isOpen);
@@ -77,8 +79,9 @@ const StudentHeader = () => {
               className="rounded-circle"
               width="40"
             />
+            <span className="mx-2 text-capitalize h6 text-white" > {authUser.user.username}</span>
           </DropdownToggle>
-          <DropdownMenu right>
+          <DropdownMenu right style={{marginTop: 5}}>
             <DropdownItem header>Account Info</DropdownItem>
             <DropdownItem onClick={() => navigate("/my-account")}>
               My Account
@@ -87,12 +90,6 @@ const StudentHeader = () => {
               Edit Profile
             </DropdownItem>
             <DropdownItem divider />
-            <DropdownItem onClick={() => navigate("/my-balance")}>
-              My Balance
-            </DropdownItem>
-            <DropdownItem onClick={() => navigate("/inbox")}>
-              Inbox
-            </DropdownItem>
             <DropdownItem onClick={logout}>Logout</DropdownItem>
           </DropdownMenu>
         </UncontrolledDropdown>

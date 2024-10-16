@@ -16,8 +16,9 @@ import {
 } from "reactstrap";
 import ReactPlayer from "react-player";
 import ReactStarRatings from "react-star-ratings";
+import { useAuthcontext } from "../../../contexts/Authcontext";
 
-const CourseDetails = () => {
+const Details = () => {
   const {
     studentCourse,
     setStudentCourse,
@@ -32,7 +33,6 @@ const CourseDetails = () => {
     const data = res.data;
     setStudentCourse(data);
   };
-
   const CalculateRating = (courseRating) => {
     if (!courseRating || courseRating.length === 0) {
       return 0;
@@ -45,42 +45,36 @@ const CourseDetails = () => {
     const averageRating = totalRating / courseRating.length; // Use the correct length for averaging
     return averageRating;
   };
+
+  const { authUser } = useAuthcontext();
+
   const covertTime = (time) => {
-    const hours = parseFloat(time)
+    const hours = parseFloat(time);
 
-    const days = Math.floor(hours / 24);  // Calculate the number of full days
-    const remainingHours = hours % 24;    // Calculate the remaining hours after days
+    const days = Math.floor(hours / 24); // Calculate the number of full days
+    const remainingHours = hours % 24; // Calculate the remaining hours after days
 
+    if (days >= 7) {
+      const weeks = days % 7;
+      const week = Math.floor(days / 7);
+      const remainingDays = days % 7;
+      const cuntWeeks = week > 1 ? "weeks" : "week";
 
-    
-    if (days >= 7){
-        const weeks = days % 7 ;
-        const week = Math.floor(days / 7);
-        const remainingDays = days % 7;
-        const cuntWeeks = (week > 1) ? 'weeks' : 'week'
-
-        
-        if (remainingDays == 0) {
-            return `${week} ${cuntWeeks}`;
-        }
-        else {
-            return `${week} ${cuntWeeks} and ${remainingDays} days`;
-        }
+      if (remainingDays == 0) {
+        return `${week} ${cuntWeeks}`;
+      } else {
+        return `${week} ${cuntWeeks} and ${remainingDays} days`;
+      }
+    } else {
+      if (days == 0) {
+        return `${remainingHours} hours`;
+      } else if (remainingHours == 0) {
+        return `${days} days`;
+      } else {
+        return `${days} days and ${remainingHours} hours`;
+      }
     }
-    else {
-        if (days == 0) {
-            return `${remainingHours} hours`;
-        }
-        else if (remainingHours == 0) {
-            return `${days} days`;
-        }
-        else {
-            return `${days} days and ${remainingHours} hours`;
-        }
-        
-    }
-}
-
+  };
   useEffect(() => {
     if (studentCourseId) fetchCourseDetails(id);
   }, [studentCourseId]);
@@ -99,14 +93,13 @@ const CourseDetails = () => {
           <h3 className="mt-4">Course Detail</h3>
           <Card className="mb-4">
             <CardBody className="p-4 d-flex justify-content-start">
-              
               <div className="mx-4">
                 <img
                   src={studentCourse.imageUrl}
                   alt={studentCourse.name}
                   className="card-img-top"
                   style={{
-                    borderRadius: '8px',
+                    borderRadius: "8px",
                     height: 250,
                   }}
                 />
@@ -130,8 +123,9 @@ const CourseDetails = () => {
                   Course Details
                 </CardSubtitle>
                 <CardText>{studentCourse.description}</CardText>
-                <CardText >
-                  <strong>Duration:</strong> {covertTime(studentCourse.duration)} 
+                <CardText>
+                  <strong>Duration:</strong>{" "}
+                  {covertTime(studentCourse.duration)}
                 </CardText>
                 <CardText className="text-capitalize">
                   <strong>Status:</strong> {studentCourse.status}
@@ -146,11 +140,7 @@ const CourseDetails = () => {
             <Row>
               {studentCourse.subjects.map((subject) => (
                 <Col md="6">
-                  <ListGroupItem
-                    key={subject._id}
-                    className="mb-3"
-                    style={{ boxShadow: " 0px 1px 5px 2px rgba(0,0,0,0.27" }}
-                  >
+                  <ListGroupItem key={subject._id} className="mb-3">
                     <Card style={{ boxShadow: "none" }}>
                       <CardBody>
                         <CardTitle tag="h5">{subject.name}</CardTitle>
@@ -166,30 +156,6 @@ const CourseDetails = () => {
                                   {material.description}
                                 </p>
                               </div>
-                              <div>
-                                {material.content_type === "PDF" && (
-                                  <Button
-                                    color="primary"
-                                    size="sm"
-                                    href={material.content_url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
-                                    View PDF
-                                  </Button>
-                                )}
-                                {material.content_type === "Video" && (
-                                  <div className="video-player-container">
-                                    <ReactPlayer
-                                      url={material.content_url}
-                                      controls={true}
-                                      width="100%"
-                                      height="300px"
-                                    />
-                                  </div>
-                                )}
-                                {/* Add more conditions for other types if needed */}
-                              </div>
                             </ListGroupItem>
                           ))}
                         </ListGroup>
@@ -200,10 +166,40 @@ const CourseDetails = () => {
               ))}
             </Row>
           </ListGroup>
+          <ListGroup>
+            <Row>
+              <Col md="12">
+                <h3 className="mt-4 mb-3">Review and Commands</h3>
+                <ListGroupItem className="mb-3">
+                  {studentCourse.ratings.map((rating) => (
+                    <div>
+                      <div className="my-2 p-2">
+                        <div className="text-capitalize ">
+                          User : {authUser.user.username}
+                        </div>
+                        <div>
+                          Rating : <ReactStarRatings
+                            rating={CalculateRating(studentCourse.ratings) || 0}
+                            starRatedColor="gold"
+                            numberOfStars={5}
+                            name="rating"
+                            starDimension="20px"
+                            starSpacing="2px"
+                          />
+                        </div>
+                        <div>Comments : <br /> {rating.comment}</div>
+                        <hr />
+                      </div>
+                    </div>
+                  ))}
+                </ListGroupItem>
+              </Col>
+            </Row>
+          </ListGroup>
         </>
       )}
     </div>
   );
 };
 
-export default CourseDetails;
+export default Details;
