@@ -13,11 +13,8 @@ const Starter = () => {
 
       {/***Sales & Feed***/}
       <Row>
-        <Col sm="6" lg="6" xl="7" xxl="8">
+        <Col sm="12" lg="12" xl="12" xxl="12">
           <SalesChart />
-        </Col>
-        <Col sm="6" lg="6" xl="5" xxl="4">
-          <Feeds  />
         </Col>
       </Row>
       {/***Table ***/}

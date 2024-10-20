@@ -8,17 +8,17 @@ import user5 from "../../assets/images/users/user5.jpg";
 const tableData = [
   {
     avatar: user1,
-    name: "Hanna Gover",
-    email: "hgover@gmail.com",
-    project: "Flexy React",
+    name: "Mandrin Thomas ",
+    email: "mandrin@gmail.com",
+    project: "Full Stact React development",
     status: "pending",
     weeks: "35",
     budget: "95K",
   },
   {
     avatar: user2,
-    name: "Hanna Gover",
-    email: "hgover@gmail.com",
+    name: "Patrik" ,
+    email: "patrik@gmail.com",
     project: "Lading pro React",
     status: "done",
     weeks: "35",
@@ -26,27 +26,27 @@ const tableData = [
   },
   {
     avatar: user3,
-    name: "Hanna Gover",
-    email: "hgover@gmail.com",
-    project: "Elite React",
+    name: "Leena Thomas",
+    email: "leena@gmail.com",
+    project: "Web Designing",
     status: "holt",
     weeks: "35",
     budget: "95K",
   },
   {
     avatar: user4,
-    name: "Hanna Gover",
-    email: "hgover@gmail.com",
-    project: "Flexy React",
+    name: "Jack Lenin",
+    email: "jack@gmail.com",
+    project: "Mobile App Development React Native",
     status: "pending",
     weeks: "35",
     budget: "95K",
   },
   {
     avatar: user5,
-    name: "Hanna Gover",
-    email: "hgover@gmail.com",
-    project: "Ample React",
+    name: "John fernandes",
+    email: "john@gmail.com",
+    project: "Chakra UI React",
     status: "done",
     weeks: "35",
     budget: "95K",
@@ -58,7 +58,7 @@ const ProjectTables = () => {
     <div>
       <Card>
         <CardBody>
-          <CardTitle tag="h5">Project Listing</CardTitle>
+          <CardTitle tag="h5">Course Monitors</CardTitle>
           <CardSubtitle className="mb-2 text-muted" tag="h6">
             Overview of the projects
           </CardSubtitle>
