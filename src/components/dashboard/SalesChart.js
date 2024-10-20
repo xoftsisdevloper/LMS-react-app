@@ -69,9 +69,9 @@ const SalesChart = () => {
   return (
     <Card>
       <CardBody>
-        <CardTitle tag="h5">Sales Summary</CardTitle>
+        <CardTitle tag="h5">Paid Course Earnings</CardTitle>
         <CardSubtitle className="text-muted" tag="h6">
-          Yearly Sales Report
+          Yearly Course Earning Report
         </CardSubtitle>
         <Chart options={options} series={series} type="bar" height="379" />
       </CardBody>
