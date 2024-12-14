@@ -5,11 +5,6 @@
       "icon": "bi bi-speedometer2"
     },
     {
-      "title": "Group",
-      "href": "/instructor/groups",
-      "icon": "bi bi-person-lines-fill"
-    },
-    {
       "title": "Course",
       "href": "/instructor/courses",
       "icon": "bi bi-book-half"

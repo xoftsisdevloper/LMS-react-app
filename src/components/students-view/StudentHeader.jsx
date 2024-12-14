@@ -66,33 +66,43 @@ const StudentHeader = () => {
               <i className="bi bi-three-dots-vertical"></i>
             )}
           </Button>
+
           
-          <Button color="light" onClick={() => navigate("/student-courses")}>
-            <i className="bi bi-folder-fill me-1"></i> My Courses
-          </Button>
         </div>
-        <UncontrolledDropdown isOpen={dropdownOpen} toggle={toggle}>
-          <DropdownToggle color="transparent" className="p-0">
-            <img
-              src={user1}
-              alt="profile"
-              className="rounded-circle"
-              width="40"
-            />
-            <span className="mx-2 text-capitalize h6 text-white" > {authUser.user.username}</span>
-          </DropdownToggle>
-          <DropdownMenu right style={{marginTop: 5}}>
-            <DropdownItem header>Account Info</DropdownItem>
-            <DropdownItem onClick={() => navigate("/my-account")}>
-              My Account
-            </DropdownItem>
-            <DropdownItem onClick={() => navigate("/edit-profile")}>
-              Edit Profile
-            </DropdownItem>
-            <DropdownItem divider />
-            <DropdownItem onClick={logout}>Logout</DropdownItem>
-          </DropdownMenu>
-        </UncontrolledDropdown>
+        {authUser ? (
+          <UncontrolledDropdown isOpen={dropdownOpen} toggle={toggle}>
+            <DropdownToggle color="transparent" className="p-0">
+              <img
+                src={user1}
+                alt="profile"
+                className="rounded-circle"
+                width="40"
+              />
+              <span className="mx-2 text-capitalize h6 text-white">
+                {" "}
+                {authUser.user.username}
+              </span>
+            </DropdownToggle>
+            <DropdownMenu right style={{ marginTop: 5 }}>
+              <DropdownItem header>Account Info</DropdownItem>
+              <DropdownItem onClick={() => navigate("/student-courses")}>
+                My Courses
+              </DropdownItem>
+              <DropdownItem onClick={() => navigate("/my-account")}>
+                My Account
+              </DropdownItem>
+              <DropdownItem onClick={() => navigate("/edit-profile")}>
+                Edit Profile
+              </DropdownItem>
+              <DropdownItem divider />
+              <DropdownItem onClick={logout}>Logout</DropdownItem>
+            </DropdownMenu>
+          </UncontrolledDropdown>
+        ) : (
+          <Button color="light" onClick={() => navigate("/login")}>
+             Login
+          </Button>
+        )}
       </Collapse>
     </Navbar>
   );

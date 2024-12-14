@@ -82,3 +82,21 @@ h2, .custom-decaration {
   background-color: #016A70;
   color: #fff;
 }
+
+a {
+  text-decoration: none;
+}
+
+.list-group-item:has(.sub_cards):hover, .unit-card .card-body:hover {
+  background-color: #016A70;
+  color: #ffffff !important;
+}
+
+/* Target the h5 element inside .list-group-item when it is hovered */
+.list-group-item:has(.sub_cards):hover h5, .unit-card .card-body:hover .card-title {
+  color: #ffffff !important;
+}
+
+.bg_description {
+  background-color: #dbdbdb !important;
+}
