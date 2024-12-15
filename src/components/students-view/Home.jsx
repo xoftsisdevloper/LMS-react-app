@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Container,
   Row,
@@ -25,7 +25,7 @@ const Home = () => {
 
   const { course, loading } = useCourse();
 
-  const firstFourCourses = course.slice(0, 4);
+  const firstFourCourses = course;
   const handleNavigation = (route) => {
     navigate(route);
   };
@@ -33,63 +33,55 @@ const Home = () => {
   const student_name_array = [
     "James Gosling",
     "Bjarne Stroustrup",
-    "Guido van Rossum"
-  ]
+    "Guido van Rossum",
+  ];
   return (
     <>
-      {/* Hero Section */}
-      <div className=" text-white text-center py-5 home-banner d-flex justify-content-center align-items-center" style={{ backgroundRepeat: "no-repeat", backgroundBlendMode: "overlay", backgroundColor: "#000000bd"}}>
-        <Container>
-          <h1 className="display-4">Unlock Your Potential</h1>
-          <p className="lead">
-            Explore a wide range of courses and boost your career.
-          </p>
-          <Button color="light" onClick={() => navigate("/courses")} className="btn-lg">
-             Explore Courses
-          </Button>
-        </Container>
-      </div>
-
       {/* Featured Courses Section */}
       <Container className="mt-4">
         <h2 className="text-center mb-4">Featured Courses</h2>
-        <Row className="justify-content-center">
+        <Row className="">
           {firstFourCourses.map((crs) => (
-            <Col sm="6" md="3" key={crs._id} id="home-list-course">
-              <Card className="mb-4">
-                <CardImg top src={crs.imageUrl} alt={course.title} id="course-home-card-img"  />
-                <CardBody>
-                  <CardTitle tag="h5">{crs.name}</CardTitle>
-                  <CardText className="truncate-3-lines">{crs.description}</CardText>
-                </CardBody>
-              </Card>
+            <Col
+              sm="6"
+              md="3"
+              key={crs._id}
+              id="home-list-course"
+              className="rounded"
+            >
+              <Link to={`/course/explore-details/${crs._id}`}>
+                <Card className="mb-4">
+                  
+                  <CardBody className="rounded" style={{backgroundImage: `url(${crs.imageUrl})`}}>
+                    <CardTitle tag="h5" className="px-1">{crs.name}</CardTitle>
+                  </CardBody>
+                </Card>
+              </Link>
             </Col>
           ))}
         </Row>
 
         {/* Testimonials Section */}
         <h2 className="text-center my-4">What Our Students Say</h2>
-        <Row className="mb-4">          
-            <Col md="12">
-              <TestimonialSlider />              
-            </Col>          
+        <Row className="mb-4">
+          <Col md="12">
+            <TestimonialSlider />
+          </Col>
         </Row>
 
-        <Row className="mb-4">          
-            <Col md="12">
-              <AboutUs />              
-            </Col>          
+        <Row className="mb-4">
+          <Col md="12">
+            <AboutUs />
+          </Col>
         </Row>
-
-        
 
         {/* Call to Action Section */}
       </Container>
-      <Row className="mb-0">          
-            <Col md="12">
-              <ContactUs />              
-            </Col>          
-        </Row>
+      <Row className="mb-0">
+        <Col md="12">
+          <ContactUs />
+        </Col>
+      </Row>
     </>
   );
 };

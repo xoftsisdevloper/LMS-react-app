@@ -48,7 +48,21 @@ table th {
 }
 
 #home-list-course .card-body {
-  min-height: 180px;
+  min-height: 200px;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-blend-mode: overlay;
+  background-color: #0000008f;
+  padding: 10px 10px;
+  position: relative;
+}
+
+#home-list-course .card-body .card-title{
+  color: #fff;
+  position: absolute;
+  word-break: break-word;
+  bottom: 0;
 }
 
 .truncate-3-lines {
@@ -81,4 +95,26 @@ h2, .custom-decaration {
 .nav-tabs .nav-item .active {
   background-color: #016A70;
   color: #fff;
+}
+
+a {
+  text-decoration: none;
+}
+
+.list-group-item:has(.sub_cards):hover, .unit-card .card-body:hover {
+  background-color: #016A70;
+  color: #ffffff !important;
+}
+
+/* Target the h5 element inside .list-group-item when it is hovered */
+.list-group-item:has(.sub_cards):hover h5, .unit-card .card-body:hover .card-title {
+  color: #ffffff !important;
+}
+
+.bg_description {
+  background-color: #dbdbdb !important;
+}
+
+.count-text {
+  font-size: 35px;
 }

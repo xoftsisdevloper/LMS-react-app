@@ -20,6 +20,8 @@ import InstructorCourseList from './components/instructor/course/CourseList';
 import GroupList from './components/instructor/group/GroupList';
 import GroupForm from './components/instructor/group/GroupForm';
 import ExploreDetails from './components/students-view/course/ExploreDetails';
+import UnitsPage from './components/students-view/course/unitsPage';
+import MaterialPage from './components/students-view/course/materialPage';
 
 const App = () => {
   const { authUser } = useAuthcontext();
@@ -50,9 +52,7 @@ const App = () => {
         <Route
           path='/'
           element={
-            <ProtectedRoute condition={authUser && !authUser.user.isAdmin} redirectTo="/login">
-              <StudentFullLayout />
-            </ProtectedRoute>
+            <StudentFullLayout />
           }
         >
           <Route path="/" element={<Navigate to="/home" />} />
@@ -60,6 +60,8 @@ const App = () => {
           <Route path="/student-courses" element={<StudentCourseList />} />
           <Route path="/course/details/:id" element={<CourseDetails />} />
           <Route path="/course/explore-details/:id" element={<ExploreDetails />} />
+          <Route path="/course/units/:id" element={<UnitsPage />} />
+          <Route path="/course/materials/:id" element={<MaterialPage />} />
 
           <Route path="/home" element={<Home />} />
         </Route>

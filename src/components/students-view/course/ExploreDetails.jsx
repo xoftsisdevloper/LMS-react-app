@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useStudentContext } from "../../../contexts/Student-context";
-import { useParams } from "react-router-dom";
-import { CourseService } from "../../../service/baseService";
+import { Link, useParams } from "react-router-dom";
+import { CourseService, getUserById } from "../../../service/baseService";
 import {
   Card,
   CardBody,
@@ -27,12 +27,25 @@ const Details = () => {
   } = useStudentContext();
   const params = useParams();
   const { id } = params;
-
+  const [userData, setUserData] = useState({});
   const fetchCourseDetails = async (courseId) => {
     const res = await CourseService(courseId);
     const data = res.data;
     setStudentCourse(data);
   };
+
+  const fetchUserById = async (userId) => {
+    try {
+      const user = await getUserById(userId); // Fetch user data by ID
+      setUserData((prevData) => ({
+        ...prevData,
+        [userId]: user, // Store the user data with their ID as key
+      }));
+    } catch (error) {
+      console.error("Error fetching user by ID:", error);
+    }
+  };
+
   const CalculateRating = (courseRating) => {
     if (!courseRating || courseRating.length === 0) {
       return 0;
@@ -86,10 +99,36 @@ const Details = () => {
     return () => setStudentCourse(null);
   }, [id]);
 
+  useEffect(() => {
+    // Fetch user data for each rating.user ID
+    if (studentCourse && studentCourse.ratings) {
+      studentCourse.ratings.forEach((rating) => {
+        if (rating.user) {
+          fetchUserById(rating.user); // Fetch user data by their ID
+        }
+      });
+    }
+  }, [studentCourse]);
+
   return (
     <div className="container mt-4">
       {studentCourse && (
         <>
+          <h3 className="mt-5 mb-3">Subjects </h3>
+
+          <ListGroup>
+            <Row>
+              {studentCourse.subjects.map((subject, index) => (
+                <Col md="4">
+                  <ListGroupItem key={subject._id} className="mb-3 py-3">
+                    <Link className="sub_cards" to={`/course/units/${subject._id}`}>
+                      <h5 className="mb-0">{index + 1}. {subject.name}</h5>
+                    </Link>
+                  </ListGroupItem>
+                </Col>
+              ))}
+            </Row>
+          </ListGroup>
           <h3 className="mt-4">Course Detail</h3>
           <Card className="mb-4">
             <CardBody className="p-4 d-flex justify-content-start">
@@ -134,38 +173,6 @@ const Details = () => {
             </CardBody>
           </Card>
 
-          <h3 className="mt-5 mb-3">Subjects and Materials</h3>
-
-          <ListGroup>
-            <Row>
-              {studentCourse.subjects.map((subject) => (
-                <Col md="6">
-                  <ListGroupItem key={subject._id} className="mb-3">
-                    <Card style={{ boxShadow: "none" }}>
-                      <CardBody>
-                        <CardTitle tag="h5">{subject.name}</CardTitle>
-                        <CardText>{subject.description}</CardText>
-                        <h6>Materials:</h6>
-                        <ListGroup>
-                          {subject.materials.map((material) => (
-                            <ListGroupItem key={material._id} className="">
-                              <div className="flex-grow-1">
-                                <strong>{material.name}</strong> -{" "}
-                                {material.content_type}
-                                <p className="material-description">
-                                  {material.description}
-                                </p>
-                              </div>
-                            </ListGroupItem>
-                          ))}
-                        </ListGroup>
-                      </CardBody>
-                    </Card>
-                  </ListGroupItem>
-                </Col>
-              ))}
-            </Row>
-          </ListGroup>
           <ListGroup>
             <Row>
               <Col md="12">
@@ -173,21 +180,41 @@ const Details = () => {
                 <ListGroupItem className="mb-3">
                   {studentCourse.ratings.map((rating) => (
                     <div>
-                      <div className="my-2 p-2">
-                        <div className="text-capitalize ">
-                          User : {authUser.user.username}
+                      <div className=" p-3">
+                        <div className="d-flex gap-2">
+                          <div className="text-capitalize align-self-center">
+                            {userData[rating.user]
+                              ? userData[rating.user].data.username
+                              : "Loading..."}
+                          </div>
+                          <div style={{ marginTop: "-2px" }}>
+                            <ReactStarRatings
+                              rating={
+                                CalculateRating(studentCourse.ratings) || 0
+                              }
+                              starRatedColor="gold"
+                              numberOfStars={5}
+                              name="rating"
+                              starDimension="20px"
+                              starSpacing="2px"
+                              className="align-self-center"
+                            />
+                          </div>
+                          <div className="ms-auto">
+                            {new Date(rating.createdAt).toLocaleDateString(
+                              "en-US",
+                              {
+                                year: "numeric",
+                                month: "long", // 'short' or 'numeric'
+                                day: "numeric",
+                              }
+                            )}
+                          </div>
                         </div>
-                        <div>
-                          Rating : <ReactStarRatings
-                            rating={CalculateRating(studentCourse.ratings) || 0}
-                            starRatedColor="gold"
-                            numberOfStars={5}
-                            name="rating"
-                            starDimension="20px"
-                            starSpacing="2px"
-                          />
+                        <div className="mt-1 mb-0">
+                          <span style={{ fontSize: "14px" }}>Comments :</span>{" "}
+                          <br /> <p className="px-4 ">{rating.comment}</p>
                         </div>
-                        <div>Comments : <br /> {rating.comment}</div>
                         <hr />
                       </div>
                     </div>
