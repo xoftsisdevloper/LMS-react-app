@@ -118,11 +118,11 @@ const Details = () => {
 
           <ListGroup>
             <Row>
-              {studentCourse.subjects.map((subject) => (
+              {studentCourse.subjects.map((subject, index) => (
                 <Col md="4">
                   <ListGroupItem key={subject._id} className="mb-3 py-3">
                     <Link className="sub_cards" to={`/course/units/${subject._id}`}>
-                      <h5 className="mb-0">{subject.name}</h5>
+                      <h5 className="mb-0">{index + 1}. {subject.name}</h5>
                     </Link>
                   </ListGroupItem>
                 </Col>

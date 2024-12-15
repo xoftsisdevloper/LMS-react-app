@@ -25,7 +25,7 @@ const Home = () => {
 
   const { course, loading } = useCourse();
 
-  const firstFourCourses = course.slice(0, 4);
+  const firstFourCourses = course;
   const handleNavigation = (route) => {
     navigate(route);
   };
@@ -40,7 +40,7 @@ const Home = () => {
       {/* Featured Courses Section */}
       <Container className="mt-4">
         <h2 className="text-center mb-4">Featured Courses</h2>
-        <Row className="justify-content-center">
+        <Row className="">
           {firstFourCourses.map((crs) => (
             <Col
               sm="6"
@@ -51,18 +51,9 @@ const Home = () => {
             >
               <Link to={`/course/explore-details/${crs._id}`}>
                 <Card className="mb-4">
-                  <CardImg
-                    top
-                    src={crs.imageUrl}
-                    alt={crs.title}
-                    id="course-home-card-img"
-                    className="rounded-top"
-                  />
-                  <CardBody className="rounded">
-                    <CardTitle tag="h5">{crs.name}</CardTitle>
-                    <CardText className="truncate-3-lines">
-                      {crs.description}
-                    </CardText>
+                  
+                  <CardBody className="rounded" style={{backgroundImage: `url(${crs.imageUrl})`}}>
+                    <CardTitle tag="h5" className="px-1">{crs.name}</CardTitle>
                   </CardBody>
                 </Card>
               </Link>

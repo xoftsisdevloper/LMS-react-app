@@ -48,7 +48,21 @@ table th {
 }
 
 #home-list-course .card-body {
-  min-height: 180px;
+  min-height: 200px;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-blend-mode: overlay;
+  background-color: #0000008f;
+  padding: 10px 10px;
+  position: relative;
+}
+
+#home-list-course .card-body .card-title{
+  color: #fff;
+  position: absolute;
+  word-break: break-word;
+  bottom: 0;
 }
 
 .truncate-3-lines {
@@ -99,4 +113,8 @@ a {
 
 .bg_description {
   background-color: #dbdbdb !important;
+}
+
+.count-text {
+  font-size: 35px;
 }
