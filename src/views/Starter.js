@@ -28,13 +28,10 @@ const Starter = () => {
   // Use useEffect to call fetchCourses when the component mounts
   useEffect(() => {
     fetchCourses();
-  }, []); // Empty dependency array to ensure it runs only once when the component mounts
-
+  }, []);
+  
   return (
     <div>
-      {/***Top Cards***/}
-
-      {/***Sales & Feed***/}
       <Row className="g-4">
         {/* Courses Card */}
         <Col sm="12" lg="3" xl="3" xxl="3">
@@ -54,7 +51,7 @@ const Starter = () => {
                 </CardSubtitle>
               </div>
             </CardBody>
-          </Card>
+          </Card> 
         </Col>
 
         {/* Users Card */}

@@ -15,6 +15,9 @@ import {
   Input,
   Label,
 } from "reactstrap";
+
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import classnames from "classnames";
 
 // Constants for Tab IDs
@@ -31,6 +34,8 @@ const CourseForm = () => {
     description: "",
     duration: "",
     imageUrl: "",
+    course_type: "",
+    join_code: "",
     subjects: [
       {
         name: "",
@@ -53,6 +58,7 @@ const CourseForm = () => {
         .get(`/api/courses/${courseId}`)
         .then((response) => {
           const fetchedCourseData = response.data;
+          console.log("Fetched course data:", fetchedCourseData);
           if (!Array.isArray(fetchedCourseData.subjects)) {
             fetchedCourseData.subjects = [];
           }
@@ -61,7 +67,9 @@ const CourseForm = () => {
             name: fetchedCourseData.name || "",
             description: fetchedCourseData.description || "",
             duration: fetchedCourseData.duration || "",
+            course_type: fetchedCourseData.course_type || "general",
             imageUrl: fetchedCourseData.imageUrl || "",
+            join_code: fetchedCourseData.join_code || "",
             subjects: fetchedCourseData.subjects.map((subject) => ({
               name: subject.name || "",
               description: subject.description || "",
@@ -97,9 +105,14 @@ const CourseForm = () => {
     try {
       if (courseId) {
         await axios.put(`/api/courses/update-course/${courseId}`, courseData);
+        console.log("This is the data of the course", courseData);
+
         toast.success("Course updated successfully!");
       } else {
+        console.log("This is the data of the course", courseData);
         await axios.post("/api/courses/create-course", courseData);
+        console.log("This is the data of the course", courseData);
+
         toast.success("Course created successfully!");
       }
       navigate("/instructor/courses");
@@ -172,6 +185,7 @@ const CourseForm = () => {
     return timeOfCourse;
   };
 
+  console.log("Course Data:", courseData);
   return (
     <div className="container mt-4">
       <h2 style={{ textDecoration: "none", marginBottom: "1rem" }}>
@@ -204,285 +218,330 @@ const CourseForm = () => {
         </NavItem>
       </Nav>
       <Form onSubmit={handleSubmit}>
-        <TabContent activeTab={activeTab}>
-          {/* Course Tab */}
-          <TabPane
-            tabId={TABS.COURSE}
-            style={{ cursor: "pointer", padding: "20px" }}
-          >
-            <FormGroup>
-              <Label for="name">Course Name</Label>
-              <Input
-                type="text"
-                value={courseData.name}
-                className="form-control"
-                onChange={(e) =>
-                  setCourseData({ ...courseData, name: e.target.value })
-                }
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label for="description">Description</Label>
-              <Input
-                type="textarea"
-                value={courseData.description}
-                className="form-control"
-                onChange={(e) =>
-                  setCourseData({ ...courseData, description: e.target.value })
-                }
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label for="duration">Duration (hours)</Label>
-              <Input
-                type="number"
-                value={duration(courseData.subjects)}
-                className="form-control"
-                onChange={(e) =>
-                  setCourseData({ ...courseData, duration: e.target.value })
-                }
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label for="imageUrl">Image URL</Label>
-              <Input
-                type="text"
-                value={courseData.imageUrl}
-                className="form-control"
-                onChange={(e) =>
-                  setCourseData({ ...courseData, imageUrl: e.target.value })
-                }
-              />
-            </FormGroup>
-            {/* Image Preview */}
-            {courseData.imageUrl && (
-              <div className="image-preview mt-2">
-                <Label>Image Preview:</Label>
-                <img
-                  src={courseData.imageUrl}
-                  alt="Course Preview"
-                  style={{
-                    width: "100%",
-                    height: "auto",
-                    maxHeight: "300px",
-                    objectFit: "cover",
+        <div className="tab-container">
+          <TabContent activeTab={activeTab}>
+            {/* Course Tab */}
+            <TabPane
+              tabId={TABS.COURSE}
+              style={{ cursor: "pointer", padding: "20px" }}
+            >
+              <FormGroup>
+                <Label for="name">Course Name</Label>
+                <Input
+                  type="text"
+                  value={courseData.name}
+                  placeholder="Enter course name"
+                  className="form-control"
+                  onChange={(e) => {
+                    const name = e.target.value;
+                    const sanitizedName = name
+                      .toUpperCase()
+                      .replace(/[^A-Z0-9]/g, "");
+                    const uniqueSuffix = Date.now().toString(36).toUpperCase(); // Simple unique suffix
+                    const join_code = `${sanitizedName}-${uniqueSuffix}`;
+
+                    setCourseData({ ...courseData, name, join_code });
                   }}
                 />
-              </div>
-            )}
-          </TabPane>
+                <Input
+                  type="hidden"
+                  value={courseData.join_code}
+                  className="form-control"
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="description">Description</Label>
+                <ReactQuill
+                  value={courseData.description || ""}
+                  onChange={(value) =>
+                    setCourseData((prev) => ({ ...prev, description: value }))
+                  }
+                />
+              </FormGroup>
 
-          {/* Subjects Tab */}
-          <TabPane tabId={TABS.SUBJECTS} style={{ padding: "20px" }}>
-            {courseData.subjects.map((subject, subjectIndex) => (
-              <div key={subjectIndex} className="mb-3">
-                <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
+              <FormGroup>
+                <Label for="duration">Course Type</Label>
+                <Input
+                  type="select"
+                  id={`material-content_type-${0}-${0}`}
+                  onChange={(e) =>
+                    setCourseData({
+                      ...courseData,
+                      course_type: e.target.value,
+                    })
+                  }
+                  value={courseData.course_type}
                 >
-                  <h4>Subject {subjectIndex + 1}</h4>
-                  <Button
-                    color="danger"
-                    onClick={() =>
-                      setCourseData({
-                        ...courseData,
-                        subjects: courseData.subjects.filter(
-                          (_, index) => index !== subjectIndex
-                        ),
-                      })
-                    }
+                  <option value="">Select Content Type</option>
+                  <option value="general">General</option>
+                  <option value="academic">Academic</option>
+                  <option value="school">School</option>
+                  <option value="college">College</option>
+                  {/* Add more content types as needed */}
+                </Input>
+              </FormGroup>
+              <FormGroup>
+                <Label for="duration">Duration (hours)</Label>
+                <Input
+                  type="number"
+                  value={duration(courseData.subjects)}
+                  className="form-control"
+                  onChange={(e) =>
+                    setCourseData({ ...courseData, duration: e.target.value })
+                  }
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="imageUrl">Image URL</Label>
+                <Input
+                  type="text"
+                  value={courseData.imageUrl}
+                  className="form-control"
+                  onChange={(e) =>
+                    setCourseData({ ...courseData, imageUrl: e.target.value })
+                  }
+                />
+              </FormGroup>
+              {/* Image Preview */}
+              {courseData.imageUrl && (
+                <div className="image-preview mt-2">
+                  <Label>Image Preview:</Label>
+                  <img
+                    src={courseData.imageUrl}
+                    alt="Course Preview"
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                      maxHeight: "300px",
+                      objectFit: "contain",
+                    }}
+                  />
+                </div>
+              )}
+            </TabPane>
+
+            {/* Subjects Tab */}
+            <TabPane tabId={TABS.SUBJECTS} style={{ padding: "20px" }}>
+              {courseData.subjects.map((subject, subjectIndex) => (
+                <div key={subjectIndex} className="mb-3">
+                  <div
+                    style={{ display: "flex", justifyContent: "space-between" }}
                   >
-                    <i class="bi bi-x-circle-fill"></i>
+                    <h4>Subject {subjectIndex + 1}</h4>
+                    <Button
+                      color="danger"
+                      onClick={() =>
+                        setCourseData({
+                          ...courseData,
+                          subjects: courseData.subjects.filter(
+                            (_, index) => index !== subjectIndex
+                          ),
+                        })
+                      }
+                    >
+                      <i className="bi bi-x-circle-fill"></i>
+                    </Button>
+                  </div>
+                  <FormGroup>
+                    <Label for={`subject-name-${subjectIndex}`}>
+                      Subject Name
+                    </Label>
+                    <Input
+                      type="text"
+                      id={`subject-name-${subjectIndex}`}
+                      value={subject.name}
+                      onChange={(e) =>
+                        handleSubjectChange(
+                          subjectIndex,
+                          "name",
+                          e.target.value
+                        )
+                      }
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for={`subject-description-${subjectIndex}`}>
+                      Subject Description
+                    </Label>
+                    <Input
+                      type="text"
+                      id={`subject-description-${subjectIndex}`}
+                      value={subject.description}
+                      onChange={(e) =>
+                        handleSubjectChange(
+                          subjectIndex,
+                          "description",
+                          e.target.value
+                        )
+                      }
+                    />
+                    <ReactQuill
+                  value={subject.description || ""}
+                  onChange={(value) =>
+                    setCourseData((prev) => ({ ...prev, description: value }))
+                  }
+                />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for={`subject-duration-${subjectIndex}`}>
+                      Subject Duration (hours)
+                    </Label>
+                    <Input
+                      type="number"
+                      id={`subject-duration-${subjectIndex}`}
+                      value={subject.duration}
+                      onChange={(e) =>
+                        handleSubjectChange(
+                          subjectIndex,
+                          "duration",
+                          e.target.value
+                        )
+                      }
+                    />
+                  </FormGroup>
+                </div>
+              ))}
+              <Button color="primary" onClick={addSubject}>
+                <i class="bi bi-plus-circle-fill"></i> Add
+              </Button>
+            </TabPane>
+
+            {/* Materials Tab */}
+            <TabPane tabId={TABS.MATERIALS} style={{ padding: "20px" }}>
+              {courseData.subjects.map((subject, subjectIndex) => (
+                <div key={subjectIndex}>
+                  {subject.materials.map((material, materialIndex) => (
+                    <div key={materialIndex} className="my-3">
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <div>
+                          <h4>{subject.name} Materials</h4>
+                        </div>
+                        <div>
+                          <Button
+                            color="danger"
+                            onClick={() => {
+                              const updatedMaterials = subject.materials.filter(
+                                (_, index) => index !== materialIndex
+                              );
+                              handleSubjectChange(
+                                subjectIndex,
+                                "materials",
+                                updatedMaterials
+                              );
+                            }}
+                          >
+                            <i className="bi bi-x-circle-fill"></i>
+                          </Button>
+                        </div>
+                      </div>
+                      <FormGroup>
+                        <Label
+                          for={`material-name-${subjectIndex}-${materialIndex}`}
+                        >
+                          Material Name
+                        </Label>
+                        <Input
+                          type="text"
+                          id={`material-name-${subjectIndex}-${materialIndex}`}
+                          value={material.name}
+                          onChange={(e) =>
+                            handleMaterialChange(
+                              subjectIndex,
+                              materialIndex,
+                              "name",
+                              e.target.value
+                            )
+                          }
+                        />
+                      </FormGroup>
+                      <FormGroup>
+                        <Label
+                          for={`material-description-${subjectIndex}-${materialIndex}`}
+                        >
+                          Material Description
+                        </Label>
+                        <Input
+                          type="text"
+                          id={`material-description-${subjectIndex}-${materialIndex}`}
+                          value={material.description}
+                          onChange={(e) =>
+                            handleMaterialChange(
+                              subjectIndex,
+                              materialIndex,
+                              "description",
+                              e.target.value
+                            )
+                          }
+                        />
+                      </FormGroup>
+                      <FormGroup>
+                        <Label
+                          for={`material-content_type-${subjectIndex}-${materialIndex}`}
+                        >
+                          Content Type
+                        </Label>
+                        <Input
+                          type="select"
+                          id={`material-content_type-${subjectIndex}-${materialIndex}`}
+                          value={material.content_type}
+                          onChange={(e) =>
+                            handleMaterialChange(
+                              subjectIndex,
+                              materialIndex,
+                              "content_type",
+                              e.target.value
+                            )
+                          }
+                        >
+                          <option value="">Select Content Type</option>
+                          <option value="PDF">PDF</option>
+                          <option value="Video">Video</option>
+                          <option value="Document">Document</option>
+                          <option value="Image">Image</option>
+                          {/* Add more content types as needed */}
+                        </Input>
+                      </FormGroup>
+                      <FormGroup>
+                        <Label
+                          for={`material-content_url-${subjectIndex}-${materialIndex}`}
+                        >
+                          Content URL
+                        </Label>
+                        <Input
+                          type="text"
+                          id={`material-content_url-${subjectIndex}-${materialIndex}`}
+                          value={material.content_url}
+                          onChange={(e) =>
+                            handleMaterialChange(
+                              subjectIndex,
+                              materialIndex,
+                              "content_url",
+                              e.target.value
+                            )
+                          }
+                        />
+                      </FormGroup>
+                    </div>
+                  ))}
+                  <Button
+                    color="primary"
+                    onClick={() => addMaterial(subjectIndex)}
+                  >
+                    <i className="bi bi-plus-circle-fill"></i> Add
                   </Button>
                 </div>
-                <FormGroup>
-                  <Label for={`subject-name-${subjectIndex}`}>
-                    Subject Name
-                  </Label>
-                  <Input
-                    type="text"
-                    id={`subject-name-${subjectIndex}`}
-                    value={subject.name}
-                    onChange={(e) =>
-                      handleSubjectChange(subjectIndex, "name", e.target.value)
-                    }
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <Label for={`subject-description-${subjectIndex}`}>
-                    Subject Description
-                  </Label>
-                  <Input
-                    type="text"
-                    id={`subject-description-${subjectIndex}`}
-                    value={subject.description}
-                    onChange={(e) =>
-                      handleSubjectChange(
-                        subjectIndex,
-                        "description",
-                        e.target.value
-                      )
-                    }
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <Label for={`subject-duration-${subjectIndex}`}>
-                    Subject Duration (hours)
-                  </Label>
-                  <Input
-                    type="number"
-                    id={`subject-duration-${subjectIndex}`}
-                    value={subject.duration}
-                    onChange={(e) =>
-                      handleSubjectChange(
-                        subjectIndex,
-                        "duration",
-                        e.target.value
-                      )
-                    }
-                  />
-                </FormGroup>
-              </div>
-            ))}
-            <Button color="primary" onClick={addSubject}>
-              <i class="bi bi-plus-circle-fill"></i> Add
-            </Button>
-          </TabPane>
-
-          {/* Materials Tab */}
-          <TabPane tabId={TABS.MATERIALS} style={{ padding: "20px" }}>
-            {courseData.subjects.map((subject, subjectIndex) => (
-              <div key={subjectIndex}>
-                {subject.materials.map((material, materialIndex) => (
-                  <div key={materialIndex} className="my-3">
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <div>
-                        <h4>{subject.name} Materials</h4>
-                      </div>
-                      <div>
-                        <Button
-                          color="danger"
-                          onClick={() => {
-                            const updatedMaterials = subject.materials.filter(
-                              (_, index) => index !== materialIndex
-                            );
-                            handleSubjectChange(
-                              subjectIndex,
-                              "materials",
-                              updatedMaterials
-                            );
-                          }}
-                        >
-                          <i class="bi bi-x-circle-fill"></i>
-                        </Button>
-                      </div>
-                    </div>
-                    <FormGroup>
-                      <Label
-                        for={`material-name-${subjectIndex}-${materialIndex}`}
-                      >
-                        Material Name
-                      </Label>
-                      <Input
-                        type="text"
-                        id={`material-name-${subjectIndex}-${materialIndex}`}
-                        value={material.name}
-                        onChange={(e) =>
-                          handleMaterialChange(
-                            subjectIndex,
-                            materialIndex,
-                            "name",
-                            e.target.value
-                          )
-                        }
-                      />
-                    </FormGroup>
-                    <FormGroup>
-                      <Label
-                        for={`material-description-${subjectIndex}-${materialIndex}`}
-                      >
-                        Material Description
-                      </Label>
-                      <Input
-                        type="text"
-                        id={`material-description-${subjectIndex}-${materialIndex}`}
-                        value={material.description}
-                        onChange={(e) =>
-                          handleMaterialChange(
-                            subjectIndex,
-                            materialIndex,
-                            "description",
-                            e.target.value
-                          )
-                        }
-                      />
-                    </FormGroup>
-                    <FormGroup>
-                      <Label
-                        for={`material-content_type-${subjectIndex}-${materialIndex}`}
-                      >
-                        Content Type
-                      </Label>
-                      <Input
-                        type="select"
-                        id={`material-content_type-${subjectIndex}-${materialIndex}`}
-                        value={material.content_type}
-                        onChange={(e) =>
-                          handleMaterialChange(
-                            subjectIndex,
-                            materialIndex,
-                            "content_type",
-                            e.target.value
-                          )
-                        }
-                      >
-                        <option value="">Select Content Type</option>
-                        <option value="PDF">PDF</option>
-                        <option value="Video">Video</option>
-                        <option value="Document">Document</option>
-                        <option value="Image">Image</option>
-                        {/* Add more content types as needed */}
-                      </Input>
-                    </FormGroup>
-                    <FormGroup>
-                      <Label
-                        for={`material-content_url-${subjectIndex}-${materialIndex}`}
-                      >
-                        Content URL
-                      </Label>
-                      <Input
-                        type="text"
-                        id={`material-content_url-${subjectIndex}-${materialIndex}`}
-                        value={material.content_url}
-                        onChange={(e) =>
-                          handleMaterialChange(
-                            subjectIndex,
-                            materialIndex,
-                            "content_url",
-                            e.target.value
-                          )
-                        }
-                      />
-                    </FormGroup>
-                  </div>
-                ))}
-                <Button
-                  color="primary"
-                  onClick={() => addMaterial(subjectIndex)}
-                >
-                  <i class="bi bi-plus-circle-fill"></i> Add
-                </Button>
-              </div>
-            ))}
-          </TabPane>
-        </TabContent>
-        <Button color="success" type="submit">
-          {courseId ? "Update Course" : "Create Course"}
-        </Button>
+              ))}
+            </TabPane>
+          </TabContent>
+          <Button color="success" type="submit">
+            {courseId ? "Update Course" : "Create Course"}
+          </Button>
+        </div>
       </Form>
     </div>
   );

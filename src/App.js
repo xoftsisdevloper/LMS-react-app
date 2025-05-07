@@ -22,10 +22,19 @@ import GroupForm from './components/instructor/group/GroupForm';
 import ExploreDetails from './components/students-view/course/ExploreDetails';
 import UnitsPage from './components/students-view/course/unitsPage';
 import MaterialPage from './components/students-view/course/materialPage';
+import TestOverview from './views/ui/Test';
+import TestFormReact from './views/ui/TestForm';
+import UserList from './views/ui/UserList'
+import ApprovalList from './views/ui/ApprovalList'
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faEdit, faTrash, faBan, faTrophy } from '@fortawesome/free-solid-svg-icons';
+import TestEditForm from './views/ui/TestEditForm';
+
+
 
 const App = () => {
   const { authUser } = useAuthcontext();
-
+  library.add(faEdit, faTrash, faBan, faTrophy);
   return (
     <Suspense fallback={<Loader />}>
       <Routes>
@@ -46,6 +55,11 @@ const App = () => {
           <Route path="/instructor/courses" element={<InstructorCourseList />} />
           <Route path="/instructor/create-course" element={<CourseForm />} />
           <Route path="/instructor/edit-course/:courseId" element={<CourseForm />} />
+          <Route path="/instructor/test/" element={<TestOverview />} />
+          <Route path="/instructor/test/new" element={<TestFormReact />} />
+          <Route path="/instructor/test/:id" element={<TestFormReact />} />
+          <Route path="/instructor/users" element={<UserList />} />
+          <Route path="/instructor/approvals" element={<ApprovalList />} />
         </Route>
 
         {/* Home route for regular users */}

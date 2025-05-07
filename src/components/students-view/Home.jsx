@@ -61,27 +61,8 @@ const Home = () => {
           ))}
         </Row>
 
-        {/* Testimonials Section */}
-        <h2 className="text-center my-4">What Our Students Say</h2>
-        <Row className="mb-4">
-          <Col md="12">
-            <TestimonialSlider />
-          </Col>
-        </Row>
-
-        <Row className="mb-4">
-          <Col md="12">
-            <AboutUs />
-          </Col>
-        </Row>
-
         {/* Call to Action Section */}
       </Container>
-      <Row className="mb-0">
-        <Col md="12">
-          <ContactUs />
-        </Col>
-      </Row>
     </>
   );
 };

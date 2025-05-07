@@ -34,10 +34,10 @@ const Header = () => {
     document.getElementById("sidebarArea").classList.toggle("showSidebar");
   };
   return (
-    <Navbar color="primary" dark expand="md" className="fix-header p-0">
+    <Navbar color="white" dark expand="md" className="fix-header py-2">
       <div className="d-flex align-items-center">
         <div className="d-lg-block d-none me-5 pe-3 site_name">
-          <Logo className="h-100" />
+          <Logo className="h-75" />
         </div>
         <NavbarBrand href="/">
           <LogoWhite className=" d-lg-none" />
@@ -76,8 +76,8 @@ const Header = () => {
               className="rounded-circle"
               width="40"
             ></img>
-            <span className="mx-2 text-capitalize h6 text-white" > {authUser.user.username}</span>
-
+            <span className="mx-2 text-capitalize h6" > {authUser.user.username}</span>
+            <i class="fa-solid fa-caret-down"></i>
           </DropdownToggle>
           <DropdownMenu>
             <DropdownItem onClick={logout}>Logout</DropdownItem>
