@@ -265,12 +265,11 @@ a {
 }
 
 .table-header-user th {
-  background-color: var(--primary-color);
-  color: white;
+  background-color: #eee ;
+  color: #000;
   padding: 12px 15px;
   text-align: left;
   font-weight: 600;
-  border-bottom: 2px solid #0056b3;
 }
 
 .table-body-user .row-user:nth-child(even) {
@@ -298,7 +297,7 @@ a {
 }
 
 .role-student {
-  background-color: #6c757d; /* Gray */
+  background-color: var(--primary-color); /* Gray */
 }
 
 .role-teacher {
@@ -307,6 +306,10 @@ a {
 
 .role-admin {
   background-color: #dc3545; /* Red */
+}
+
+.role-coordinator {
+  background-color: #8a8a8a; /* Red */
 }
 
 .admin-indicator-user {
@@ -350,7 +353,8 @@ a {
 }
 
 .action-button-user {
-  background: none;
+  background: #ededed;
+  width: 40px;
   border: none;
   padding: 8px;
   margin-left: 8px;
@@ -436,7 +440,7 @@ a {
 }
 
 .header-cell-user {
-  color: #0147ab !important;
+  color: #333 !important;
 }
 
 /* this is approval styles*/
@@ -474,12 +478,11 @@ a {
 }
 
 .approval-table th {
-  background-color: var(--primary-color);
-  color: white;
+  background-color: #ededed;
+  color: #333;
   padding: 12px 15px;
   text-align: left;
   font-weight: 600;
-  border-bottom: 2px solid #0056b3;
 }
 
 .approval-table td {
@@ -559,4 +562,116 @@ a {
 .tab-container {
   background-color: #ffffff;
   padding: 20px;
+}
+
+.tab-button-user {
+  margin-right: 10px;
+  padding: 6px 12px;
+  border: none;
+  background: #c5c5c5;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.tab-button-user.active-tab-user {
+  background-color: #0147ab;
+  color: white;
+}
+
+.user-form {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 24px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.user-form h3 {
+  text-align: center;
+  margin-bottom: 24px;
+  font-size: 1.5rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.checkbox-group {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.form-actions {
+  text-align: center;
+  margin-top: 24px;
+  width: '100%';
+}
+
+button {
+  background-color: #0147ab;
+  border: none;
+  color: white;
+  padding: 10px 22px;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background-color: #0147ab;
+}
+
+label {
+  color: #0147ab;
+}
+
+.filter-input {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  padding: 4px 8px;
+  font-size: 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.global-search-box input{
+  width: 300px;
+  padding-inline: 10px;
+  border-radius: 5px;
+  margin-block: 5px;
+}
+
+.filter-buttons-approval button {
+  min-width: 80px;
 }

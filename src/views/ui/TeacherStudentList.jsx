@@ -8,10 +8,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import { useAuthcontext } from "../../contexts/Authcontext";
 
 const UserList = () => {
   const [usersData, setUsersData] = useState([]);
   const [selectedRoleTab, setSelectedRoleTab] = useState("all"); // NEW
+  const [allRequests, setAllRequests] = useState([]);
+  const { authUser } = useAuthcontext();
   const [filters, setFilters] = useState({
     username: "",
     email: "",
@@ -22,34 +25,63 @@ const UserList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 10;
 
+  // useEffect(() => {
+  //   const fetchUserData = async () => {
+  //     try {
+  //       const response = await axios.get("/api/users/");
+  //       console.log("the response", response);
+  //       setUsersData(response.data);
+  //     } catch (error) {
+  //       console.error("Error fetching courses:", error);
+  //       const errorMessage =
+  //         error.response?.data?.message ||
+  //         "Error fetching courses. Please try again.";
+  //       toast.error(errorMessage);
+  //     }
+  //   };
+
+  //   fetchUserData();
+  // }, []);
+
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchCourses = async () => {
       try {
-        const response = await axios.get("/api/users/");
-        console.log("the response", response)
-        setUsersData(response.data);
+        const response = await axios.get("/api/courses/");
+        const courses = response.data.filter((c) => c.created_by === authUser?.user?._id)
+
+        const requests = courses.flatMap((course) =>
+          (course.joinRequests).map((req) => ( req.user)));
+
+        setUsersData(requests);
       } catch (error) {
         console.error("Error fetching courses:", error);
-        const errorMessage =
+        toast.error(
           error.response?.data?.message ||
-          "Error fetching courses. Please try again.";
-        toast.error(errorMessage);
+            "Error fetching courses. Please try again."
+        );
       }
     };
 
-    fetchUserData();
+    fetchCourses();
   }, []);
+
+  console.log("The requests," , usersData);
+  
 
   const blockUser = async (user) => {
     try {
       const updatedStatus = !user.isActive;
-      await axios.put(`/api/users/update-userStatus/${user._id}`, { isActive: updatedStatus });
+      await axios.put(`/api/users/update-userStatus/${user._id}`, {
+        isActive: updatedStatus,
+      });
       setUsersData((prev) =>
         prev.map((u) =>
           u._id === user._id ? { ...u, isActive: updatedStatus } : u
         )
       );
-      toast.success(`User has been ${updatedStatus ? "unblocked" : "blocked"} successfully.`);
+      toast.success(
+        `User has been ${updatedStatus ? "unblocked" : "blocked"} successfully.`
+      );
     } catch (error) {
       console.error("Error updating user status:", error);
       const errorMessage =
@@ -66,19 +98,22 @@ const UserList = () => {
   };
 
   const filteredUsers = useMemo(() => {
-    return usersData.reverse().filter((user) => {
+    return usersData.filter((user) => {
       const matchesFilters =
         (!filters.username ||
-          user.username.toLowerCase().includes(filters.username.toLowerCase())) &&
+          user.username
+            .toLowerCase()
+            .includes(filters.username.toLowerCase())) &&
         (!filters.email ||
           user.email.toLowerCase().includes(filters.email.toLowerCase())) &&
         (!filters.role ||
           user.role.toLowerCase().includes(filters.role.toLowerCase())) &&
         (filters.isActive === "false" ? !user.isActive : user.isActive);
- 
-      const matchesTab =
-        selectedRoleTab === "all" || user.role.toLowerCase() === selectedRoleTab || (selectedRoleTab === 'admin' ? user?.isAdmin : false);
 
+      const matchesTab =
+        selectedRoleTab === "all" ||
+        user.role.toLowerCase() === selectedRoleTab ||
+        (selectedRoleTab === "admin" ? user?.isAdmin : false);
 
       return matchesFilters && matchesTab;
     });
@@ -92,7 +127,7 @@ const UserList = () => {
   }, [filteredUsers, currentPage]);
 
   const editUser = (user) => {
-    window.location.href = `/instructor/users/edit/${user._id}`;
+    window.location.href = `/teacher/users/edit/${user._id}`;
   };
   const deleteUser = (user) => console.log("Delete user:", user);
 
@@ -109,14 +144,14 @@ const UserList = () => {
   };
 
   // 💡 Role tabs
-  const roleTabs = ["all", "student", "teacher", "admin", "coordinator"];
+  const roleTabs = ["all", "student", "teacher", "admin"];
 
   return (
     <div className="user-list-user">
-      <h2 className="list-heading-user h4">Users List</h2>
+      <h2 className="list-heading-user">Students</h2>
 
       {/* Tabs */}
-      <div className="tabs-user mb-3">
+      {/* <div className="tabs-user mb-3">
         {roleTabs.map((role) => (
           <button
             key={role}
@@ -128,10 +163,12 @@ const UserList = () => {
               setCurrentPage(1);
             }}
           >
-            {role === "all" ? "All" : role.charAt(0).toUpperCase() + role.slice(1)}
+            {role === "all"
+              ? "All"
+              : role.charAt(0).toUpperCase() + role.slice(1)}
           </button>
         ))}
-      </div>
+      </div> */}
 
       <div className="table-container-user">
         <table className="user-table-user">
@@ -183,7 +220,7 @@ const UserList = () => {
             {paginatedUsers.length > 0 ? (
               paginatedUsers.map((user) => (
                 <tr key={user._id} className="row-user">
-                  <td className="cell-user text-capitalize">{user.username}</td>
+                  <td className="cell-user">{user.username}</td>
                   <td className="cell-user">{user.email}</td>
                   <td className="cell-user">
                     <span className={`role-badge-user role-${user.role}`}>

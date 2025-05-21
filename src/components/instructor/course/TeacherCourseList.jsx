@@ -21,8 +21,6 @@ const CourseList = () => {
   const [weeks, setWeeks] = useState(0);
   const [months, setMonths] = useState(0);
   const { authUser } = useAuthcontext();
-  const [searchTerm, setSearchTerm] = useState("");
-
   const covertTime = (time) => {
     const hours = parseFloat(time);
 
@@ -56,7 +54,13 @@ const CourseList = () => {
     const fetchCourses = async () => {
       try {
         const response = await axios.get("/api/courses");
-        setCourses(response.data);
+        if (authUser?.user?.role === "teacher") {
+          const respondedCourse = response.data;
+          const teacherCourse = respondedCourse.filter(
+            (course) => course.created_by === authUser?.user?._id
+          );
+          setCourses(teacherCourse);
+        }
       } catch (error) {
         console.error("Error fetching courses:", error);
         const errorMessage =
@@ -113,39 +117,22 @@ const CourseList = () => {
     }
   }
 
-  const filteredCourses = courses.filter((course) =>
-    course.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   return (
     <Container className="mt-4">
       <Row>
         <Col>
           <Card>
             <CardBody>
-              <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-                <CardTitle tag="h5" className="mb-2 mb-md-0">
-                  Course Management
-                </CardTitle>
-                <div className="d-flex gap-2 flex-wrap">
-                  <input
-                    type="text"
-                    placeholder="Search courses..."
-                    className="form-control"
-                    style={{ maxWidth: "200px" }}
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                  <Link to="/instructor/create-course">
-                    <Button color="primary">Add New</Button>
-                  </Link>
-                </div>
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <CardTitle tag="h5">Course Management</CardTitle>
+                <Link to="/teacher/create-course">
+                  <Button color="primary">Create New Course</Button>
+                </Link>
               </div>
-
               {courses.length > 0 ? (
                 <div className="table-resposive">
                   <Table borderless>
-                    <thead className="approval-table">
+                    <thead>
                       <tr>
                         <th className="text-nowrap">Image</th>
                         <th className="text-nowrap">Name</th>
@@ -156,7 +143,7 @@ const CourseList = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredCourses.map((course) => (
+                      {courses.map((course) => (
                         <tr key={course._id}>
                           <td className="text-nowrap">
                             <img
@@ -189,7 +176,7 @@ const CourseList = () => {
                             {console.log(covertTime(duration(course.subjects)))}
                           </td>
                           <td className="text-nowrap">
-                            <Link to={`/instructor/edit-course/${course._id}`}>
+                            <Link to={`/teacher/edit-course/${course._id}`}>
                               <Button
                                 color="warning"
                                 className="me-2"

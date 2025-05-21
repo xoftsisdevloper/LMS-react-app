@@ -30,6 +30,7 @@ const TABS = {
 
 const CourseForm = () => {
   const [activeTab, setActiveTab] = useState(TABS.COURSE);
+  const { authUser } = useAuthcontext();
   const [courseData, setCourseData] = useState({
     name: "",
     description: "",
@@ -47,11 +48,11 @@ const CourseForm = () => {
         ],
       },
     ],
+    created_by: authUser?.user,
   });
 
   const { courseId } = useParams();
   const navigate = useNavigate();
-  const { authUser } = useAuthcontext();
 
   useEffect(() => {
     if (courseId) {
@@ -118,7 +119,7 @@ const CourseForm = () => {
 
         toast.success("Course created successfully!");
       }
-      navigate("/instructor/courses");
+      navigate("/teacher/courses");
     } catch (error) {
       console.error("Error submitting form:", error);
       const errorMessage =
@@ -175,6 +176,7 @@ const CourseForm = () => {
       setActiveTab(tab);
     }
   };
+
   const duration = (courseSubjects) => {
     let timeOfCourse = 0;
     if (courseSubjects.length > 0) {
@@ -248,7 +250,6 @@ const CourseForm = () => {
                   type="hidden"
                   value={courseData.join_code}
                   className="form-control"
-                  readOnly
                 />
               </FormGroup>
               <FormGroup>
@@ -260,11 +261,12 @@ const CourseForm = () => {
                   }
                 />
               </FormGroup>
+
               <FormGroup>
                 <Label for="course_type">Course Type</Label>
                 <Input
                   type="select"
-                  id="course_type"
+                  id={`material-content_type-${0}-${0}`}
                   onChange={(e) =>
                     setCourseData({
                       ...courseData,
@@ -273,13 +275,20 @@ const CourseForm = () => {
                   }
                   value={courseData.course_type}
                 >
-                  <option value="">Select Course Type</option>
-
+                  <option value="">Select Content Type</option>
                   <option value="general">General</option>
-                  <option value="school">School</option>
-                  <option value="college">College</option>
-                  <option value="educational center">Educational Center</option>
-                  <option value="educational center">Educational Center</option>
+                  {authUser?.user?.isApproved && (
+                    <>
+                      {authUser.user.institution?.type?.toLowerCase() ===
+                        "school" && <option value="school">School</option>}
+                      {authUser.user.institution?.type?.toLowerCase() ===
+                        "college" && <option value="college">College</option>}
+                      {authUser.user.institution?.type?.toLowerCase() ===
+                        "educational center" && (
+                        <option value="academic">Academic</option> // 'academic' is the internal value
+                      )}
+                    </>
+                  )}
                 </Input>
               </FormGroup>
               <FormGroup>
@@ -288,7 +297,10 @@ const CourseForm = () => {
                   type="number"
                   value={duration(courseData.subjects)}
                   className="form-control"
-                  readOnly
+                  onChange={(e) =>
+                    setCourseData({ ...courseData, duration: e.target.value })
+                  }
+                  readOnly={true}
                 />
               </FormGroup>
               <FormGroup>

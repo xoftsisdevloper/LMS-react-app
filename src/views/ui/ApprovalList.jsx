@@ -1,95 +1,205 @@
-import React, { useState } from 'react';
-const ApprovalManagement = () => {
-  const [requests, setRequests] = useState([
-    { id: 1, username: 'John Doe', course: 'React Basics', status: 'pending' },
-    { id: 2, username: 'Jane Smith', course: 'Advanced JavaScript', status: 'pending' },
-    { id: 3, username: 'Michael Brown', course: 'Vue Essentials', status: 'pending' },
-    { id: 4, username: 'lolo salamanca', course: 'Vue Essentials', status: 'pending' },
-    { id: 5, username: 'hector salamanca', course: 'Vue Essentials', status: 'pending' },
-    { id: 6, username: 'don eladio', course: 'Vue Essentials', status: 'pending' },
-    { id: 7, username: 'don juan', course: 'Vue Essentials', status: 'pending' },
-    { id: 8, username: 'gutovo fring', course: 'Vue Essentials', status: 'pending' },
-  ]);
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useAuthcontext } from "../../contexts/Authcontext";
 
-  const handleApprove = (id) => {
-    setRequests((prev) =>
-      prev.map((req) =>
-        req.id === id ? { ...req, status: 'approved' } : req
-      )
+const ApprovalManagement = () => {
+  const [allRequests, setAllRequests] = useState([]);
+  const [filteredRequests, setFilteredRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const [usernameFilter, setUsernameFilter] = useState("");
+  const [courseFilter, setCourseFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const {authUser} = useAuthcontext();
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get("/api/courses/");
+        const courses = response.data.filter((e) => e.created_by === authUser?.user?._id);
+
+        const requests = courses.flatMap((course) =>
+          (course.joinRequests || []).map((req) => ({
+            id: `${course._id}_${req.user?._id || "unknown"}`,
+            user: req.user,
+            status: req.status,
+            course: course.name,
+            courseId: course._id,
+          }))
+        );
+
+        setAllRequests(requests);
+        setFilteredRequests(requests);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+        toast.error(
+          error.response?.data?.message || "Error fetching courses. Please try again."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
+  useEffect(() => {
+    const filtered = allRequests.filter((req) => {
+      const username = req.user?.username?.toLowerCase() || "";
+      const course = req.course?.toLowerCase() || "";
+      const status = req.status?.toLowerCase() || "";
+
+      return (
+        username.includes(usernameFilter.toLowerCase()) &&
+        course.includes(courseFilter.toLowerCase()) &&
+        status.includes(statusFilter.toLowerCase())
+      );
+    });
+
+    setFilteredRequests(filtered);
+  }, [usernameFilter, courseFilter, statusFilter, allRequests]);
+
+  const handleApprove = async (req) => {
+    try {
+      await SendRequest(req.courseId, req.user?._id, "approved");
+      updateRequestStatus(req.id, "approved");
+    } catch (err) {
+      toast.error("Error approving request");
+    }
+  };
+
+  const handleReject = async (req) => {
+    try {
+      await SendRequest(req.courseId, req.user?._id, "rejected");
+      updateRequestStatus(req.id, "rejected");
+    } catch (err) {
+      toast.error("Error rejecting request");
+    }
+  };
+
+  const updateRequestStatus = (id, status) => {
+    setAllRequests((prev) =>
+      prev.map((r) => (r.id === id ? { ...r, status } : r))
     );
   };
 
-  const handleReject = (id) => {
-    setRequests((prev) =>
-      prev.map((req) =>
-        req.id === id ? { ...req, status: 'rejected' } : req
-      )
-    );
+  const SendRequest = async (courseId, userId, action) => {
+    try {
+      const response = await axios.post("/api/courses/handle-join-request", {
+        courseId,
+        userId,
+        action,
+      });
+      toast.success("Request processed successfully");
+      return response.data;
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Failed to process request."
+      );
+      throw error;
+    }
   };
 
   return (
     <div className="approval-list">
-      <h2 className="list-heading-approval">Approval Management</h2>
+      <h2 className="list-heading-approval h4">User Course Approvals</h2>
 
-      <div className="table-container-approval">
-        <table className="approval-table">
-          <thead>
-            <tr>
-              <th>Username</th>
-              <th>Course</th>
-              <th>Approval Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {requests.length > 0 ? (
-              requests.map((req) => (
-                <tr key={req.id}>
-                  <td>{req.username}</td>
-                  <td>{req.course}</td>
-                  <td>
-                    <span
-                      className={`status-badge ${
-                        req.status === 'pending'
-                          ? 'status-pending'
-                          : req.status === 'approved'
-                          ? 'status-approved'
-                          : 'status-rejected'
-                      }`}
-                    >
-                      {req.status.charAt(0).toUpperCase() + req.status.slice(1)}
-                    </span>
-                  </td>
-                  <td>
-                    {req.status === 'pending' ? (
-                      <div className="action-buttons">
-                        <button
-                          className="action-button-approve"
-                          onClick={() => handleApprove(req.id)}
-                        >
-                          Approve
-                        </button>
-                        <button
-                          className="action-button-reject"
-                          onClick={() => handleReject(req.id)}
-                        >
-                          Reject
-                        </button>
-                      </div>
-                    ) : (
-                      <em>No actions</em>
-                    )}
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr className="empty-row-approval">
-                <td colSpan="4">No approval requests found.</td>
+      {loading ? (
+        <p>Loading requests...</p>
+      ) : (
+        <div className="table-container-approval">
+          <table className="approval-table">
+            <thead>
+              <tr>
+                <th>
+                  Username
+                  <input
+                    type="text"
+                    className="filter-input"
+                    placeholder="Filter"
+                    value={usernameFilter}
+                    onChange={(e) => setUsernameFilter(e.target.value)}
+                  />
+                </th>
+                <th>
+                  Course
+                  <input
+                    type="text"
+                    className="filter-input"
+                    placeholder="Filter"
+                    value={courseFilter}
+                    onChange={(e) => setCourseFilter(e.target.value)}
+                  />
+                </th>
+                <th>
+                  Status
+                  <input
+                    type="text"
+                    className="filter-input"
+                    placeholder="Filter"
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                  />
+                </th>
+                <th>Actions</th>
               </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {filteredRequests.length === 0 ? (
+                <tr>
+                  <td colSpan="4">No approval requests found.</td>
+                </tr>
+              ) : (
+                filteredRequests.map((req) => (
+                  <tr key={req.id}>
+                    <td>{req.user?.username || "Unknown"}</td>
+                    <td>{req.course || "Unknown"}</td>
+                    <td>
+                      <span
+                        className={`status-badge ${
+                          req.status === "pending"
+                            ? "status-pending"
+                            : req.status === "approved"
+                            ? "status-approved"
+                            : req.status === "rejected"
+                            ? "status-rejected"
+                            : "status-unknown"
+                        }`}
+                      >
+                        {req.status
+                          ? req.status.charAt(0).toUpperCase() +
+                            req.status.slice(1)
+                          : "Unknown"}
+                      </span>
+                    </td>
+                    <td>
+                      {req.status === "pending" ? (
+                        <div className="action-buttons">
+                          <button
+                            className="action-button-approve"
+                            onClick={() => handleApprove(req)}
+                          >
+                            Approve
+                          </button>
+                          <button
+                            className="action-button-reject"
+                            onClick={() => handleReject(req)}
+                          >
+                            Reject
+                          </button>
+                        </div>
+                      ) : (
+                        <em>No actions</em>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };
