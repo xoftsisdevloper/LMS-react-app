@@ -32,7 +32,7 @@ const StudentHeader = () => {
   };
 
   return (
-    <Navbar color="primary" expand="md" className="fix-header py-0">
+    <Navbar color="white" expand="md" className="fix-header py-2">
       <div className="d-flex align-items-center">
         <div className="d-lg-block d-none me-5 pe-0 site_name">
           <Logo />
@@ -78,7 +78,7 @@ const StudentHeader = () => {
                 className="rounded-circle"
                 width="40"
               />
-              <span className="mx-2 text-capitalize h6 text-white">
+              <span className="mx-2 text-capitalize h6 ">
                 {" "}
                 {authUser.user.username}
               </span>

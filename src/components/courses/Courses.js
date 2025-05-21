@@ -119,7 +119,7 @@ const Courses = () => {
                             Add Group
                         </Button>
                     </div>
-                    <Table className="no-wrap mt-3 align-middle" responsive borderless>
+                    <Table className="no-wrap mt-3 align-middle course-Table" responsive borderless>
                         <thead>
                             <tr className="bg-primary text-white">
                                 <th>Course</th>
