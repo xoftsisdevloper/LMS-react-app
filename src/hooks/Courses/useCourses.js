@@ -13,9 +13,9 @@ export const useCourse = () => {
             const res = await fetch('/api/courses', {
                 method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json',
-                    credentials: true
+                    'Content-Type': 'application/json'
                 },
+                credentials: 'include'
             });
 
             if (!res.ok) {

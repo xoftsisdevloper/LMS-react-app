@@ -15,6 +15,7 @@ export const useLogin = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: true,
                 body: JSON.stringify({ usernameOrEmail, password }),
             });
 
