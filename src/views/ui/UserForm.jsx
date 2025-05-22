@@ -57,7 +57,7 @@ const UserForm = ({ onSuccess }) => {
 
   useEffect(() => {
     if (isEditMode) {
-      axios.get(`/api/users/${id}`).then((res) => {
+      axios.get(`http://13.60.241.242:2000/api/users/${id}`).then((res) => {
         const user = res.data;
         setFormData({
           ...initialFormState,
@@ -72,7 +72,7 @@ const UserForm = ({ onSuccess }) => {
   }, [id]);
 
   useEffect(() => {
-    axios.get(`/api/institution`).then((res) => {
+    axios.get(`http://13.60.241.242:2000/api/institution`).then((res) => {
       setInstitutions(res.data.data);
     });
   }, []);
@@ -108,10 +108,10 @@ const UserForm = ({ onSuccess }) => {
 
     try {
       if (isEditMode) {
-        await axios.put(`/api/users/${id}`, formData);
+        await axios.put(`http://13.60.241.242:2000/api/users/${id}`, formData);
         toast.success("User updated successfully!");
       } else {
-        await axios.post("/api/users", formData);
+        await axios.post("http://13.60.241.242:2000/api/users", formData);
         toast.success("User created successfully!");
       }
 

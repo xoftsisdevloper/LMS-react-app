@@ -16,7 +16,7 @@ const ApprovalManagement = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get("/api/courses/");
+        const response = await axios.get("http://13.60.241.242:2000/api/courses/");
         const courses = response.data.filter((e) => e.created_by === authUser?.user?._id);
 
         const requests = courses.flatMap((course) =>
@@ -86,7 +86,7 @@ const ApprovalManagement = () => {
 
   const SendRequest = async (courseId, userId, action) => {
     try {
-      const response = await axios.post("/api/courses/handle-join-request", {
+      const response = await axios.post("http://13.60.241.242:2000/api/courses/handle-join-request", {
         courseId,
         userId,
         action,

@@ -46,7 +46,7 @@ const UserList = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get("/api/courses/");
+        const response = await axios.get("http://13.60.241.242:2000/api/courses/");
         const courses = response.data.filter((c) => c.created_by === authUser?.user?._id)
 
         const requests = courses.flatMap((course) =>
@@ -71,7 +71,7 @@ const UserList = () => {
   const blockUser = async (user) => {
     try {
       const updatedStatus = !user.isActive;
-      await axios.put(`/api/users/update-userStatus/${user._id}`, {
+      await axios.put(`http://13.60.241.242:2000/api/users/update-userStatus/${user._id}`, {
         isActive: updatedStatus,
       });
       setUsersData((prev) =>

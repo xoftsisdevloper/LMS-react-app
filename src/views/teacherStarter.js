@@ -44,7 +44,7 @@ const Starter = () => {
   // Fetch all users
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("/api/users");
+      const response = await axios.get("http://13.60.241.242:2000/api/users");
       const allUsers = response.data;
       setUsers(allUsers);
       // Categorize users

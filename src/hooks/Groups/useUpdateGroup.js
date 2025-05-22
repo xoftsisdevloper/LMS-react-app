@@ -10,7 +10,7 @@ export const useUpdateGroup = () => {
     const UpdateGroup = async (name, description, duration, status, id) => {
         setLoading(true);
         try {
-            const res = await fetch(`/api/groups/${id}`, {
+            const res = await fetch(`http://13.60.241.242:2000/api/groups/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

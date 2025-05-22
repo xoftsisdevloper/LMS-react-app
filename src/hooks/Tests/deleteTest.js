@@ -8,7 +8,7 @@ export const useDeleteTests = () => {
   const deleteTest = async (id) => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/tests/${id}`, {
+      const res = await fetch(`http://13.60.241.242:2000/api/tests/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

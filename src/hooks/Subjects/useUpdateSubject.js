@@ -10,7 +10,7 @@ export const useUpdateSubject = () => {
     const UpdateSubject = async (name, description, duration, status, id) => {
         setLoading(true);
         try {
-            const res = await fetch(`/api/subject/${id}`, {
+            const res = await fetch(`http://13.60.241.242:2000/api/subject/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

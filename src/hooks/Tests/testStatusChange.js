@@ -10,7 +10,7 @@ export const useTestStatusChange = () => {
     setLoading(true);
     console.log("Changing status for test ID:", id, "to status:", JSON.stringify({ status }));
     try {
-      const res = await fetch(`/api/tests/test-status/${id}`, {
+      const res = await fetch(`http://13.60.241.242:2000/api/tests/test-status/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

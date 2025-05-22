@@ -42,7 +42,7 @@ export const useCreateTests = () => {
 export const updateTest = async (testId, updatedData) => {
 
   try {
-    const res = await fetch(`/api/tests/${testId}`, {
+    const res = await fetch(`http://13.60.241.242:2000/api/tests/${testId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

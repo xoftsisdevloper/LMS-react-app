@@ -25,7 +25,7 @@ const UserList = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get("/api/users/");
+        const response = await axios.get("http://13.60.241.242:2000/api/users/");
         console.log("the response", response)
         setUsersData(response.data);
       } catch (error) {
@@ -43,7 +43,7 @@ const UserList = () => {
   const blockUser = async (user) => {
     try {
       const updatedStatus = !user.isActive;
-      await axios.put(`/api/users/update-userStatus/${user._id}`, { isActive: updatedStatus });
+      await axios.put(`http://13.60.241.242:2000/api/users/update-userStatus/${user._id}`, { isActive: updatedStatus });
       setUsersData((prev) =>
         prev.map((u) =>
           u._id === user._id ? { ...u, isActive: updatedStatus } : u

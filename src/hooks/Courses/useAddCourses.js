@@ -10,7 +10,7 @@ export const useCreateCourse = () => {
     const createCourse = async (name, description, duration, subject_ids, status) => {
         setLoading(true);
         try {
-            const res = await fetch('/api/courses', {
+            const res = await fetch('http://13.60.241.242:2000/api/courses', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

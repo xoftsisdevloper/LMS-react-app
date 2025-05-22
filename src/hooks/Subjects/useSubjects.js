@@ -10,7 +10,7 @@ export const useSubject = () => {
     const fetchSubjects = async () => {
         setLoading(true);
         try {
-            const res = await fetch('/api/subjects', {
+            const res = await fetch('http://13.60.241.242:2000/api/subjects', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

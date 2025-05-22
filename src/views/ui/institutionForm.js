@@ -46,7 +46,7 @@ const InstitutionForm = () => {
 
     // Fetch coordinators
     useEffect(() => {
-        axios.get(`/api/users/role/coordinator`)
+        axios.get(`http://13.60.241.242:2000/api/users/role/coordinator`)
             .then(res => setCoordinators(res.data))
             .catch(() => toast.error("Error loading coordinators"));
     }, []);
@@ -54,7 +54,7 @@ const InstitutionForm = () => {
     // Fetch institution data for editing
     useEffect(() => {
     if (id) {
-        axios.get(`/api/institution/${id}`)
+        axios.get(`http://13.60.241.242:2000/api/institution/${id}`)
             .then(res => {
                 const data = res.data;
                 setFormData({
@@ -95,10 +95,10 @@ const InstitutionForm = () => {
         e.preventDefault();
         try {
             if (id) {
-                await axios.put(`/api/institution/${id}`, formData);
+                await axios.put(`http://13.60.241.242:2000/api/institution/${id}`, formData);
                 toast.success("Institution updated successfully!");
             } else {
-                await axios.post("/api/institution", formData);
+                await axios.post("http://13.60.241.242:2000/api/institution", formData);
                 toast.success("Institution created successfully!");
             }
             navigate("/institutions");

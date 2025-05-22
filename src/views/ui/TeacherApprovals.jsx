@@ -18,8 +18,8 @@ const TeacherApprovals = () => {
       try {
         const url =
           authUser?.user?.role === "coordinator"
-            ? `/api/institution/managment/${authUser.user._id}/`
-            : `/api/institution`;
+            ? `http://13.60.241.242:2000/api/institution/managment/${authUser.user._id}/`
+            : `http://13.60.241.242:2000/api/institution`;
         const res = await axios.get(url);
         setInstitution(res.data?.data || []);
       } catch (err) {
@@ -38,7 +38,7 @@ const TeacherApprovals = () => {
 
       try {
         const approvalPromises = institution.map((item) =>
-          axios.get(`/api/users/institution/${item?._id}`).then((res) =>
+          axios.get(`http://13.60.241.242:2000/api/users/institution/${item?._id}`).then((res) =>
             res.data.map((user) => ({
               ...user,
               institutionName: item?.name || "Unknown",
@@ -106,7 +106,7 @@ const TeacherApprovals = () => {
 
   const SendRequest = async (approveID, userId, status) => {
     try {
-      const response = await axios.put(`/api/users/approve-teacher/${userId}`, {
+      const response = await axios.put(`http://13.60.241.242:2000/api/users/approve-teacher/${userId}`, {
         approver_id: approveID,
         status,
       });

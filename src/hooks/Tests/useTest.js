@@ -10,7 +10,7 @@ export const useTests = () => {
     const fetchTests = async () => {
         setLoading(true);
         try {
-            const res = await fetch('/api/tests/', {
+            const res = await fetch('http://13.60.241.242:2000/api/tests/', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

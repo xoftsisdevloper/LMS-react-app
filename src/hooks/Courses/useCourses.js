@@ -10,7 +10,7 @@ export const useCourse = () => {
     const fetchCourses = async () => {
         setLoading(true);
         try {
-            const res = await fetch('/api/courses', {
+            const res = await fetch('http://13.60.241.242:2000/api/courses', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'

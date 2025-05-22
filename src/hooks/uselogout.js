@@ -11,7 +11,7 @@ const useLogout = () => {
     setLoading(true)
     try {
 
-        const res = await fetch('/api/users/sign_out', {
+        const res = await fetch('http://13.60.241.242:2000/api/users/sign_out', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

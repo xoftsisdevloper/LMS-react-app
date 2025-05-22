@@ -13,7 +13,7 @@ export const useGetTests = ({id}) => {
         
         setLoading(true);
         try {
-            const res = await fetch(`/api/tests/${id}`, {
+            const res = await fetch(`http://13.60.241.242:2000/api/tests/${id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

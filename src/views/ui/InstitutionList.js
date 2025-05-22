@@ -59,8 +59,8 @@ const InstitutionTable = () => {
         const fetchInstitutions = async () => {
             try {
                 const url = authUser?.user?.role === 'coordinator'
-                    ? `/api/institution/managment/${authUser.user._id}/`
-                    : `/api/institution`;
+                    ? `http://13.60.241.242:2000/api/institution/managment/${authUser.user._id}/`
+                    : `http://13.60.241.242:2000/api/institution`;
                 const res = await axios.get(url);
                 setInstitutions(res.data?.data || []);
             } catch (err) {
@@ -76,7 +76,7 @@ const InstitutionTable = () => {
     console.log("the user", authUser.user._id)
 
     const deleteData = (id) => {
-        axios.delete(`/api/institution/${id}`)
+        axios.delete(`http://13.60.241.242:2000/api/institution/${id}`)
             .then(res => toast.success(res.message))
             .catch(err => toast.error("Error loading Coordinators"));
     }

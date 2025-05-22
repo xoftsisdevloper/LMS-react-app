@@ -10,7 +10,7 @@ export const useCreateGroup = () => {
     const createGroup = async (name, description, duration, status) => {
         setLoading(true);
         try {
-            const res = await fetch('/api/groups', {
+            const res = await fetch('http://13.60.241.242:2000/api/groups', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
