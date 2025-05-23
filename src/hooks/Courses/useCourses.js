@@ -10,32 +10,34 @@ export const useCourse = () => {
     const fetchCourses = async () => {
         setLoading(true);
         try {
-            const res = await fetch('http://13.60.241.242:2000/api/courses', {
+            const baseUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:2000';
+
+            const res = await fetch(`${baseUrl}/api/courses`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                credentials: 'include'
+                credentials: 'include' // Important for sending cookies
             });
 
             if (!res.ok) {
                 const errorData = await res.json();
-                throw new Error(errorData.message);
+                throw new Error(errorData.message || 'Failed to fetch courses');
             }
 
             const data = await res.json();
             setCourse(data);
         } catch (error) {
-            console.error(error);
-            toast.error(error.message);
+            console.error("Error fetching courses:", error);
+            toast.error(error.message || 'Something went wrong');
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchCourses(); 
-        
-    },[course]); 
+        fetchCourses(); // ✅ Only on component mount
+    }, []); // ✅ Prevents infinite loop
+
     return { loading, course };
 };
